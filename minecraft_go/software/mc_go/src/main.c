@@ -40,9 +40,10 @@ int main() {
 	//project1_demo_initialize_savefile();
 	//project1_demo_main();
 	//journey_display_test();
+	stego_engine_test("blackbox.bmp", "output2.bmp");
 #endif
 
-	main_controller_run();
+	//main_controller_run();
 
 	printf("Done\n");
 

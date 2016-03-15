@@ -51,6 +51,17 @@ int sdcard_write(const short int filehandle, const char * buffer, const int buff
 int sdcard_writeln(const short int filehandle, const char * data, const int data_length);
 
 /**
+ * Reads a string from an opened file on the sdcard.
+ * Automatically null terminates the buffer provided.
+ *
+ * @param filehandle - an open filehandle
+ * @param buffer - buffer to store the read data
+ * @param num - amount to read into the buffer
+ * @returns - number of bytes read from file
+ */
+int sdcard_readstr(const short int filehandle, char * buffer, const int num);
+
+/**
  * Reads from an opened file on the sdcard
  *
  * @param filehandle - an open filehandle
