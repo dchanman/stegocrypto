@@ -12,91 +12,6 @@
 #include "stego_engine.h"
 
 /* Test functions for importing and exporting bitmap files */
-static int stego_engine_import_image(const char *filename, char **data_out, int * length, int * data_start_offset);
-static int stego_engine_export_image(const char * filename, const char * data, const int length);
-
-static int stego_engine_import_image(const char * filename, char ** data_out, int * length, int * data_start_offset) {
-	char header[STEGO_ENGINE_BMP_HEADER_SIZE];
-	char * filedata;
-	short int fh;
-	int i;
-	int read;
-
-	sdcard_init();
-
-	if (sdcard_open(&fh, filename)) {
-		printf("Could not open\n");
-		return -1;
-	}
-
-	if (sdcard_read(fh, header, sizeof(header)) < 0) {
-		printf("Could not read\n");
-		return -1;
-	}
-
-	for (i = 0; i < 14; i++) {
-		printf("%02X ", header[i] & 0x00FF);
-	}
-
-	stego_engine_process_header(header, length, data_start_offset);
-
-	printf("Filesize: %d bytes\n", *length);
-
-	filedata = malloc((*length)*sizeof(char));
-	if (filedata == NULL) {
-		printf("Not enough memory to import file data");
-		return -1;
-	}
-	memset(filedata, '\0', (*length)*sizeof(char));
-
-	printf("Sufficient memory available\n");
-
-	/* Copy in the whole file */
-	sdcard_close(fh);
-	if (sdcard_open(&fh, filename)) {
-		printf("Could not open\n");
-		return -1;
-	}
-
-	read = sdcard_read(fh, filedata, *length);
-	if (read < (*length)) {
-		printf("Could not read entire file, read <%d> of length <%d>\n", read, *length);
-		goto err;
-	}
-
-	*data_out = filedata;
-
-	sdcard_close(fh);
-
-	return 0;
-
-err:
-	sdcard_close(fh);
-	return -1;
-}
-
-static int stego_engine_export_image(const char * filename, const char * data, const int length) {
-	short int fh;
-	int wrote;
-
-	if (sdcard_open(&fh, filename) != 0) {
-		printf("Could not open\n");
-		return -1;
-	}
-
-	wrote = sdcard_write(fh, data, length);
-	if (wrote != length) {
-		printf("Did not write full .bmp file: wrote <%d> of <%d> bytes\n", wrote, length);
-		return -1;
-	}
-
-	if (sdcard_close(fh) != 0) {
-		printf("Could not close SDCard file\n");
-		return -1;
-	}
-
-	return 0;
-}
 
 static void hexdump(const char * data, int length) {
 	int i;
@@ -118,7 +33,7 @@ int stego_engine_test(const char * filename, const char * output_filename) {
 	int extracted_length;
 	int result;
 
-	result = stego_engine_import_image(filename, &imagedata, &imagelength, &offset);
+	result = bitmap_import_image(filename, &imagedata, &imagelength, &offset);
 	if (result != 0) {
 		printf("Error with importing image\n");
 		return result;
@@ -150,11 +65,11 @@ int stego_engine_test(const char * filename, const char * output_filename) {
 		printf("Test FAILED. Expected:\n%s\n\nActual:\n%s\n", message, extracted);
 
 	printf("Exporting...\n");
-	stego_engine_export_image(output_filename, imagedata, imagelength);
+	bitmap_export_image(output_filename, imagedata, imagelength);
 
 	printf("Done exporting, let's try opening it again\n");
 	free(imagedata);
-	result = stego_engine_import_image(output_filename, &imagedata, &imagelength, &offset);
+	result = bitmap_import_image(output_filename, &imagedata, &imagelength, &offset);
 	if (result != 0) {
 		printf("Error with importing image\n");
 		return result;

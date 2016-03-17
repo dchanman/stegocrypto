@@ -8,8 +8,6 @@
 #ifndef STEGO_ENGINE_H_
 #define STEGO_ENGINE_H_
 
-#define STEGO_ENGINE_BMP_HEADER_SIZE 14
-
 /**
  * Hides the bytes inside <data> inside a bitmap file <imagedata>.
  *
@@ -41,13 +39,6 @@ void stego_engine_embed(char * imagedata, const char * data, const int datalengt
  */
 void stego_engine_extract(const char * imagedata, char ** data, int * datalength);
 
-/**
- * Extracts information from a bitmap file's header.
- *
- * @param[in] header - char array containing a bitmap header
- * @param[out] imagefilesize - size of the entire bitmap file
- * @param[out] data_start_offset - byte offset indicating where the bitmap RGB data begins
- */
-void stego_engine_process_header(const char * header, int * imagefilesize, int * data_start_offset);
+
 
 #endif /* STEGO_ENGINE_H_ */
