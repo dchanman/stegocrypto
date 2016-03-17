@@ -138,80 +138,80 @@ boolean savefile_save(const savedata_t data)
 	/* Write data in struct order */
 	snprintf(buffer, sizeof(buffer), "%d", data.creeps_defeated);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.health);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	/* Location */
 	snprintf(buffer, sizeof(buffer), "%d", data.destination.lat_degree);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%.3lf", data.destination.lat_minute);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%c", data.destination.lat_direction);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.destination.long_degree);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%.3lf", data.destination.long_minute);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%c", data.destination.long_direction);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	/* DateTime */
 
 	snprintf(buffer, sizeof(buffer), "%d", data.start_time.year);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.start_time.month);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.start_time.day);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.start_time.hour);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.start_time.minute);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.start_time.second);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	snprintf(buffer, sizeof(buffer), "%d", data.journey_complete);
 	result = sdcard_writeln(fd, buffer, strlen(buffer));
-	if (result != 0)
+	if (result < 0)
 		goto error;
 
 	sdcard_close(fd);
