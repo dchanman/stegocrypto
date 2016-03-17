@@ -37,37 +37,6 @@ void stego_engine_extract(const char * imagedata, char ** data, int * datalength
 #endif
 }
 
-/* TODO: Refactor me into a bitmap library */
-void stego_engine_process_header(const char * header, int * imagefilesize, int * data_start_offset) {
-
-	/* Check the magic numbers at the start of our file to make sure this is a .bmp file */
-	if (header[0] != 0x42 || header[1] != 0x4D) {
-		printf("Error: Not a .bmp file\n");
-		return;
-	}
-
-	/*
-	 * The bitmap size if stored as
-	 * 	high bits:	bytes 2, 3
-	 * 	low bits:	bytes 4, 5
-	 */
-	/* Low bits */
-	*imagefilesize = 0x0000FFFF & ((header[3] << 8) + (header[2]));
-	/* High bits */
-	*imagefilesize += 0xFFFF0000 & ((header[5] << 24) + (header[4] << 16));
-
-	/* Process the header to find the offset where the bitmap data resides */
-	/*
-	 * The bitmap data offset is stored as:
-	 * 	high bits:	bytes 10, 11
-	 * 	low bits:	bytes 12, 13
-	 */
-	/* Low bits */
-	*data_start_offset = 0x0000FFFF & ((header[11] << 8) + (header[10]));
-	/* High bits */
-	*data_start_offset += 0xFFFF0000 & ((header[13] << 24) + (header[12] << 16));
-}
-
 void stego_engine_embed_sw(char * imagedata, const char * data, const int datalength) {
 	int i;
 	int k;
@@ -83,7 +52,7 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 	}
 
 	/* Process the header */
-	stego_engine_process_header(imagedata, &imagelength, &imageoffset);
+	bitmap_process_header(imagedata, &imagelength, &imageoffset);
 
 	/* Make sure out bitmap file has enough space to hold our data */
 	if (datalength * 8 > (imagelength - imageoffset)) {
@@ -150,7 +119,7 @@ void stego_engine_extract_sw(const char * imagedata, char ** data, int * datalen
 		return;
 	}
 
-	stego_engine_process_header(imagedata, &imagelength, &offset);
+	bitmap_process_header(imagedata, &imagelength, &offset);
 
 	i = offset;
 
