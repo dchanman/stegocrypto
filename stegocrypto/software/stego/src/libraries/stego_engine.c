@@ -130,12 +130,12 @@ void stego_engine_extract_sw(const char * imagedata, char ** data, int * datalen
 	/* Process the length of our encoded data */
 	*datalength = 0;
 	for (k = 0; k < 32; k++) {
-		*datalength += (imagedata[i] << k);
+		*datalength += ((0x01 & imagedata[i]) << k);
 		i++;
 	}
 
 	/* Create a buffer to hold the data we're about to extract */
-	*data = malloc((*datalength)*sizeof(char));
+	*data = malloc((*datalength) * sizeof(char));
 	if (*data == NULL) {
 		printf("Out of memory\n");
 		return;
@@ -147,7 +147,7 @@ void stego_engine_extract_sw(const char * imagedata, char ** data, int * datalen
 
 		/* 8 bits of data is stored across 8 bytes of RGB */
 		for (k = 0; k < 8; k++) {
-			byte += (imagedata[i] << k);
+			byte += ((0x01 & imagedata[i]) << k);
 			i++;
 		}
 

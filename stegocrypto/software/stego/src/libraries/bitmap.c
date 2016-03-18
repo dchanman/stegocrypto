@@ -97,7 +97,7 @@ int bitmap_export_image(const char * filename, const char * data, const int leng
 int bitmap_process_header(const char * header, int * imagefilesize, int * data_start_offset, int * width, int * height) {
 
 	/* Check the magic numbers at the start of our file to make sure this is a .bmp file */
-	if (header[0] != 0x42 || header[1] != 0x4D) {
+	if ((0xFF & header[0]) != 0x42 || (0xFF & header[1]) != 0x4D) {
 		printf("Error: Not a .bmp file\n");
 		return -1;
 	}
@@ -108,7 +108,7 @@ int bitmap_process_header(const char * header, int * imagefilesize, int * data_s
 	 * 	low bits:	bytes 4, 5
 	 */
 	/* Low bits */
-	*imagefilesize = 0x0000FFFF & ((header[3] << 8) + (header[2]));
+	*imagefilesize = 0x0000FFFF & ((header[3] << 8) + (0xFF & header[2]));
 	/* High bits */
 	*imagefilesize += 0xFFFF0000 & ((header[5] << 24) + (header[4] << 16));
 
@@ -119,7 +119,7 @@ int bitmap_process_header(const char * header, int * imagefilesize, int * data_s
 	 * 	low bits:	bytes 12, 13
 	 */
 	/* Low bits */
-	*data_start_offset = 0x0000FFFF & ((header[11] << 8) + (header[10]));
+	*data_start_offset = 0x0000FFFF & ((header[11] << 8) + (0xFF & header[10]));
 	/* High bits */
 	*data_start_offset += 0xFFFF0000 & ((header[13] << 24) + (header[12] << 16));
 
@@ -129,9 +129,9 @@ int bitmap_process_header(const char * header, int * imagefilesize, int * data_s
 	 * 	width bits:		bytes 18-21
 	 * 	height bits:	bytes 22-25
 	 */
-	*width = 0x0000FFFF & ((header[19] << 8) + (header[18]));
+	*width = 0x0000FFFF & ((header[19] << 8) + (0xFF & header[18]));
 	*width += 0xFFFF0000 & ((header[21] << 24) + (header[20] << 16));
-	*height = 0x0000FFFF & ((header[23] << 8) + (header[22]));
+	*height = 0x0000FFFF & ((header[23] << 8) + (0xFF & header[22]));
 	*height += 0xFFFF0000 & ((header[25] << 24) + (header[24] << 16));
 
 	return 0;

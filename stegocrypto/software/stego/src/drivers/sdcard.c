@@ -174,6 +174,7 @@ int sdcard_readstr(const short int filehandle, char * buffer, const int num)
 int sdcard_read(const short int filehandle, char * buffer, const int num)
 {
 	int i = -1;
+	short int result;
 
 	if (device_reference == NULL) {
 		printf("Error: SDCard not open\n");
@@ -193,16 +194,17 @@ int sdcard_read(const short int filehandle, char * buffer, const int num)
 
 	/* Read data from the SDCard */
 	for (i = 0; i < num; i++) {
-		buffer[i] = (char)alt_up_sd_card_read(filehandle);
-		if (buffer[i] == -1) {
+		result = alt_up_sd_card_read(filehandle);
+		if (result == -1) {
 			printf("Error: File handle was invalid on read <%d> (%08X)\n", i, i);
 			return -1;
 		}
 
-		if (buffer[i] == -2) {
+		if (result == -2) {
 			printf("Error: Unable to read from SD Card\n");
 			return -1;
 		}
+		buffer[i] = (char)result;
 	}
 
 	return i;
