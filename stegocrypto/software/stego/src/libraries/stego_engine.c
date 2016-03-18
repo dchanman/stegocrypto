@@ -45,6 +45,8 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 	char byte;
 	char bit;
 	int bitcount;
+	int w;
+	int h;
 
 	if (imagedata == NULL || data == NULL) {
 		printf("NULL pointer\n");
@@ -52,7 +54,7 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 	}
 
 	/* Process the header */
-	bitmap_process_header(imagedata, &imagelength, &imageoffset);
+	bitmap_process_header(imagedata, &imagelength, &imageoffset, &w, &h);
 
 	/* Make sure out bitmap file has enough space to hold our data */
 	if (datalength * 8 > (imagelength - imageoffset)) {
@@ -113,13 +115,15 @@ void stego_engine_extract_sw(const char * imagedata, char ** data, int * datalen
 	int offset;
 	char byte;
 	int imagelength; /* unused, just a placeholder in header function */
+	int h;
+	int w;
 
 	if (imagedata == NULL || data == NULL || datalength == NULL) {
 		printf("NULL pointer\n");
 		return;
 	}
 
-	bitmap_process_header(imagedata, &imagelength, &offset);
+	bitmap_process_header(imagedata, &imagelength, &offset, &w, &h);
 
 	i = offset;
 

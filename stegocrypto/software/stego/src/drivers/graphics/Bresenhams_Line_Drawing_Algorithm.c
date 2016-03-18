@@ -50,7 +50,7 @@
 * This function writes a single pixel to the x,y coords specified using the specified colour
 * Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 ********************************************************************************************/
-void WriteAPixel(int x, int y, int Colour)
+void graphics_write_pixel(int x, int y, int Colour)
 {
 	WAIT_FOR_GRAPHICS;				// is graphics ready for new command
 
@@ -117,7 +117,7 @@ void VLine(int x1, int y1, int length, int Colour)
 	int i;
 
 	for(i = y1; i < y1+length; i++ )
-		WriteAPixel(x1, i, Colour);
+		graphics_write_pixel(x1, i, Colour);
 }
 
 void VLine2(int x1, int y1, int length, int Colour)
@@ -189,7 +189,7 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
 
 // main loop
         for(i = 1; i <= dx; i++)    {
-            WriteAPixel(x, y, Colour);
+            graphics_write_pixel(x, y, Colour);
 
             while(error >= 0)   {
                 if(interchange == 1)

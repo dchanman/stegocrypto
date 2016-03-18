@@ -42,8 +42,10 @@ int bitmap_export_image(const char * filename, const char * data, const int leng
  * @param[in] header - char array containing a bitmap header
  * @param[out] imagefilesize - size of the entire bitmap file
  * @param[out] data_start_offset - byte offset indicating where the bitmap RGB data begins
+ * @param[out] width - width of bitmap
+ * @param[out]height - height of bitmap
  * @return 0 on success, -1 on error
  */
-int bitmap_process_header(const char * header, int * imagefilesize, int * data_start_offset);
+int bitmap_process_header(const char * header, int * imagefilesize, int * data_start_offset, int * width, int * height);
 
 #endif /* BITMAP_H_ */
