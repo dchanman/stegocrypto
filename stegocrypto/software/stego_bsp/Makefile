@@ -215,7 +215,7 @@ Altera_UP_SD_Card_Avalon_Interface_driver_SRCS_ROOT := drivers
 
 # altera_up_sd_card_avalon_interface_driver sources 
 Altera_UP_SD_Card_Avalon_Interface_driver_C_LIB_SRCS := \
-	$(Altera_UP_SD_Card_Avalon_Interface_driver_SRCS_ROOT)/src/altera_up_sd_card_avalon_interface.c
+	$(Altera_UP_SD_Card_Avalon_Interface_driver_SRCS_ROOT)/src/Altera_UP_SD_Card_Avalon_Interface.c
 
 # altera_avalon_jtag_uart_driver sources root 
 altera_avalon_jtag_uart_driver_SRCS_ROOT := drivers

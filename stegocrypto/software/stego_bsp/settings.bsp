@@ -2,9 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Feb 23, 2016 6:33:23 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1456281203548</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/derek/projects/cpen391-21/minecraft_go/software/mc_go_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Mar 17, 2016 3:46:51 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1458254811404</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>/home/derek/projects/stegocrypto/stegocrypto/software/stego_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../nios_system.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
@@ -884,6 +884,12 @@
                 <slaveDescriptor>rs232_0</slaveDescriptor>
                 <addressRange>0x00001010 - 0x00001017</addressRange>
                 <addressSpan>8</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>stego_engine_0</slaveDescriptor>
+                <addressRange>0x00001020 - 0x0000102F</addressRange>
+                <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

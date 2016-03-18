@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_qsys_0' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: ../../nios_system.sopcinfo
  *
- * Generated: Fri Jan 22 12:40:41 PST 2016
+ * Generated: Thu Mar 17 14:23:08 PDT 2016
  */
 
 /*
@@ -137,6 +137,7 @@
 #define __ALTERA_UP_AVALON_RS232
 #define __ALTERA_UP_AVALON_TO_EXTERNAL_BUS_BRIDGE
 #define __ALTERA_UP_SD_CARD_AVALON_INTERFACE
+#define __STEGO_ENGINE
 
 
 /*
@@ -527,6 +528,20 @@
 #define RS232_0_NAME "/dev/rs232_0"
 #define RS232_0_SPAN 8
 #define RS232_0_TYPE "altera_up_avalon_rs232"
+
+
+/*
+ * stego_engine_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_stego_engine_0 stego_engine
+#define STEGO_ENGINE_0_BASE 0x1020
+#define STEGO_ENGINE_0_IRQ -1
+#define STEGO_ENGINE_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define STEGO_ENGINE_0_NAME "/dev/stego_engine_0"
+#define STEGO_ENGINE_0_SPAN 16
+#define STEGO_ENGINE_0_TYPE "stego_engine"
 
 
 /*

@@ -45,6 +45,8 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 	char byte;
 	char bit;
 	int bitcount;
+	int w;
+	int h;
 
 	if (imagedata == NULL || data == NULL) {
 		printf("NULL pointer\n");
@@ -52,7 +54,7 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 	}
 
 	/* Process the header */
-	bitmap_process_header(imagedata, &imagelength, &imageoffset);
+	bitmap_process_header(imagedata, &imagelength, &imageoffset, &w, &h);
 
 	/* Make sure out bitmap file has enough space to hold our data */
 	if (datalength * 8 > (imagelength - imageoffset)) {
@@ -113,25 +115,27 @@ void stego_engine_extract_sw(const char * imagedata, char ** data, int * datalen
 	int offset;
 	char byte;
 	int imagelength; /* unused, just a placeholder in header function */
+	int h;
+	int w;
 
 	if (imagedata == NULL || data == NULL || datalength == NULL) {
 		printf("NULL pointer\n");
 		return;
 	}
 
-	bitmap_process_header(imagedata, &imagelength, &offset);
+	bitmap_process_header(imagedata, &imagelength, &offset, &w, &h);
 
 	i = offset;
 
 	/* Process the length of our encoded data */
 	*datalength = 0;
 	for (k = 0; k < 32; k++) {
-		*datalength += (imagedata[i] << k);
+		*datalength += ((0x01 & imagedata[i]) << k);
 		i++;
 	}
 
 	/* Create a buffer to hold the data we're about to extract */
-	*data = malloc((*datalength)*sizeof(char));
+	*data = malloc((*datalength) * sizeof(char));
 	if (*data == NULL) {
 		printf("Out of memory\n");
 		return;
@@ -143,7 +147,7 @@ void stego_engine_extract_sw(const char * imagedata, char ** data, int * datalen
 
 		/* 8 bits of data is stored across 8 bytes of RGB */
 		for (k = 0; k < 8; k++) {
-			byte += (imagedata[i] << k);
+			byte += ((0x01 & imagedata[i]) << k);
 			i++;
 		}
 

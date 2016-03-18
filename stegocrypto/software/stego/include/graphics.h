@@ -15,6 +15,8 @@
 
 #define GRAPHICS_BACKGROUND_COLOUR	BLACK
 
+void graphics_write_pixel(int x, int y, int Colour);
+
 void graphics_draw_rectangle_border(int x, int y, int width, int height, int colour);
 void graphics_draw_rectangle_filled(int x, int y, int width, int height, int colour);
 void graphics_clear_screen();

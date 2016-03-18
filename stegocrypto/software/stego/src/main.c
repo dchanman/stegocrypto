@@ -8,6 +8,7 @@
 
 #ifdef TESTING
 #include "minigames.h"
+#include "bitmap_display.h"
 #include "test.h"
 #include "project1_demo.h"
 #endif
@@ -40,7 +41,9 @@ int main() {
 	//project1_demo_initialize_savefile();
 	//project1_demo_main();
 	//journey_display_test();
-	stego_engine_test("blackbox.bmp", "output2.bmp");
+	//stego_engine_test("redbox.bmp", "output2.bmp");
+	//rgb_test();
+	bitmap_display();
 #endif
 
 	//main_controller_run();
