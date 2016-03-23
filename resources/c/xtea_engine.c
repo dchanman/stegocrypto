@@ -6,16 +6,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 //#include "xtea_engine.h"
 
 #define KEY_SCHEDULE_CONSTRAINT 0x9e3779b9
 #define NUM_ROUNDS	32
 
-void xtea_engine_encipher(uint32_t data[2], uint32_t const key[4]) {
-	uint32_t sum = 0;
+static void xtea_engine_encipher(uint32_t data[2], uint32_t const key[4]);
+static void xtea_engine_decipher(uint32_t data[2], uint32_t const key[4]);
+
+static void xtea_engine_encipher(uint32_t data[2], uint32_t const key[4]) {
 	uint32_t d0 = data[0];
 	uint32_t d1 = data[1];
 	uint32_t delta = KEY_SCHEDULE_CONSTRAINT;
+	uint32_t sum = 0;
 
 	int i;
 	for (i = 0; i < NUM_ROUNDS; i++) {
@@ -28,7 +32,7 @@ void xtea_engine_encipher(uint32_t data[2], uint32_t const key[4]) {
 	data[1] = d1;
 }
 
-void xtea_engine_decipher(uint32_t data[2], uint32_t const key[4]) {
+static void xtea_engine_decipher(uint32_t data[2], uint32_t const key[4]) {
 	uint32_t d0 = data[0];
 	uint32_t d1 = data[1];
 	uint32_t delta = KEY_SCHEDULE_CONSTRAINT;
@@ -43,6 +47,76 @@ void xtea_engine_decipher(uint32_t data[2], uint32_t const key[4]) {
 
 	data[0] = d0;
 	data[1] = d1;
+}
+
+static void xtea_engine_encipher_str(char * data, int length, uint32_t const key[4]) {
+	int i;
+
+	/* We have to convert our char * into a uint32_t * */
+	int data_num_bits = sizeof(char) * length;
+	printf("length: %d\n", length);
+	printf("data_num_bits: %d\n", data_num_bits);
+
+	/* xtea's block size is 64 bits (2 * 32-bit uints) */
+	int num_blocks = 1 + (data_num_bits / 64);
+	printf("num_blocks: %d\n", num_blocks);
+
+	/* We need an even number of blocks */
+	if (num_blocks % 2 == 0)
+		num_blocks++;
+
+	/* Create a buffer to hold our data */
+	char * buf = calloc(num_blocks * 2, sizeof(uint32_t));
+	printf("calloc: %d, %lu\n", num_blocks * 2, sizeof(uint32_t));
+
+	/* Copy in our data */
+	for (i = 0; i < length; i++)
+		buf[i] = data[i];
+
+	/* Encipher */
+	//for (i = 0; i < num_blocks; i++)
+		xtea_engine_encipher(((uint32_t *)buf), key);
+
+	/* Copy out our data */
+	for (i = 0; i < length; i++)
+		data[i] = buf[i];
+
+	free(buf);
+}
+
+static void xtea_engine_decipher_str(char * data, int length, uint32_t const key[4]) {
+int i;
+
+	/* We have to convert our char * into a uint32_t * */
+	int data_num_bits = sizeof(char) * length;
+	printf("length: %d\n", length);
+	printf("data_num_bits: %d\n", data_num_bits);
+
+	/* xtea's block size is 64 bits (2 * 32-bit uints) */
+	int num_blocks = 1 + (data_num_bits / 64);
+	printf("num_blocks: %d\n", num_blocks);
+
+	/* We need an even number of blocks */
+	if (num_blocks % 2 == 0)
+		num_blocks++;
+
+	/* Create a buffer to hold our data */
+	char * buf = calloc(num_blocks * 2, sizeof(uint32_t));
+	printf("calloc: %d, %lu\n", num_blocks * 2, sizeof(uint32_t));
+
+	/* Copy in our data */
+	for (i = 0; i < length; i++)
+		buf[i] = data[i];
+
+	/* Decipher */
+	//for (i = 0; i < num_blocks; i++)
+		xtea_engine_decipher(((uint32_t *)buf), key);
+
+	/* Copy out our data */
+	for (i = 0; i < length; i++)
+		data[i] = buf[i];
+
+	free(buf);
 }
 
 void test(uint32_t data1, uint32_t data2) {
@@ -66,6 +140,9 @@ void test(uint32_t data1, uint32_t data2) {
 int main(int argc, char ** argv) {
 	uint32_t d1 = 3;
 	uint32_t d2 = 26;
+	char str[16];
+	uint32_t key[4] = {1,2,3,4};
+	sprintf(str, "hello");
 
 	if (argc == 3) {
 		d1 = atoi(argv[1]);
@@ -73,5 +150,13 @@ int main(int argc, char ** argv) {
 	}
 
 	test(d1, d2);
+
+	printf("\n");
+
+	printf("str: %s\n", str);
+	xtea_engine_encipher_str(str, strlen(str), key);
+	printf("str: %s\n", str);
+	xtea_engine_decipher_str(str, strlen(str), key);
+	printf("str: %s\n", str);
 	return 0;
 }
