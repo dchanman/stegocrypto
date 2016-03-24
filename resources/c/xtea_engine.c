@@ -8,7 +8,7 @@
 #include <string.h>
 #include "xtea_engine.h"
 
-#define KEY_SCHEDULE_CONSTRAINT 0x9e3779b9
+#define DELTA 0x9e3779b9
 #define NUM_ROUNDS	32
 
 static int xtea_engine_char_array_to_xtea_array(const char * chars, const int char_length, uint32_t ** uint32s, int * uint32_length);
@@ -17,13 +17,12 @@ static int xtea_engine_xtea_array_to_char_array(const uint32_t * uint32ts, const
 void xtea_engine_encipher(uint32_t data[2], const uint32_t key[4]) {
 	uint32_t d0 = data[0];
 	uint32_t d1 = data[1];
-	uint32_t delta = KEY_SCHEDULE_CONSTRAINT;
 	uint32_t sum = 0;
 
 	int i;
 	for (i = 0; i < NUM_ROUNDS; i++) {
 		d0 += (((d1 << 4) ^ (d1 >> 5)) + d1) ^ (sum + key[sum & 3]);
-        sum += delta;
+        sum += DELTA;
         d1 += (((d0 << 4) ^ (d0 >> 5)) + d0) ^ (sum + key[(sum >> 11) & 3]);
 	}
 
@@ -34,13 +33,12 @@ void xtea_engine_encipher(uint32_t data[2], const uint32_t key[4]) {
 void xtea_engine_decipher(uint32_t data[2], const uint32_t key[4]) {
 	uint32_t d0 = data[0];
 	uint32_t d1 = data[1];
-	uint32_t delta = KEY_SCHEDULE_CONSTRAINT;
-	uint32_t sum = delta * NUM_ROUNDS;
+	uint32_t sum = DELTA * NUM_ROUNDS;
 
 	int i;
 	for (i = 0; i < NUM_ROUNDS; i++) {
 		d1 -= (((d0 << 4) ^ (d0 >> 5)) + d0) ^ (sum + key[(sum >> 11) & 3]);
-        sum -= delta;
+        sum -= DELTA;
         d0 -= (((d1 << 4) ^ (d1 >> 5)) + d1) ^ (sum + key[sum & 3]);
 	}
 
@@ -88,7 +86,6 @@ static int xtea_engine_char_array_to_xtea_array(const char * chars, const int ch
 	 * 64 bits  = 8 chars
 	 */
 	int new_char_length = char_length + (8 - char_length % 8);
-	//printf("new_char_length: %d\n", new_char_length);
 
 	padded_char_buffer = malloc(sizeof(char) * new_char_length);
 	if (padded_char_buffer == NULL) {
