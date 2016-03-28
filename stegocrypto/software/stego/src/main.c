@@ -14,7 +14,7 @@
 #endif
 
 int main() {
-	printf("Minecraft GO\n");
+	printf("StegoCrypto\n");
 
 #ifdef TESTING
 	/* Uncomment the feature you want to test */
@@ -42,9 +42,9 @@ int main() {
 	//project1_demo_main();
 	//journey_display_test();
 	//stego_engine_test("blackbox.bmp", "output2.bmp");
-	xtea_engine_test();
+	//xtea_engine_test();
 	//rgb_test();
-	//bitmap_display();
+	bitmap_display();
 #endif
 
 	//main_controller_run();

@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "sdcard.h"
 #include <altera_up_sd_card_avalon_interface.h>
 
@@ -255,4 +256,53 @@ int sdcard_readln(const short int filehandle, char * buffer, const int buffer_si
 	buffer[i] = '\0';
 
 	return i;
+}
+
+int sdcard_get_files(char ** filelist, int * numfiles, const char * directory) {
+	int i = 0;
+	bool fat16;
+	short int result;
+	char buffer[13];
+
+	char dir[32];
+	strcpy(dir, directory);
+
+	/**
+	 *  The SDCard module is buggy as hell. You need to call this function
+	 *  to set the internal FAT16 flag. Otherwise, alt_up_sd_card_find_first
+	 *  will always fail.
+	 */
+	fat16 = alt_up_sd_card_is_FAT16();
+
+	*numfiles = 0;
+	result = alt_up_sd_card_find_first(dir, buffer);
+
+	while (result == 0) {
+		/*
+		 * The SDCard module seriously sucks. It returns a truckload of trash.
+		 * Seriously, Altera. Did you get a bunch of Co-ops to write this in version 13.1?
+		 *
+		 * I've spent too much time digging around forums. The best thing I could do here
+		 * is filter out the trash. Sorry guys.
+		 *
+		 * Trash filenames don't contain file extensions.
+		 * Examples of trash:
+		 * 	* AO
+		 * 	* (null)
+		 * 	* Af
+		 *
+		 * By filtering filenames to the ones that contain '.' characters, we get rid of trash.
+		 */
+		if (strstr(buffer, ".") != NULL) {
+			filelist[*numfiles] = strdup(buffer);
+			printf("[%s]: \t(%d) %s (%p)\n", __func__, *numfiles, filelist[*numfiles], &filelist[*numfiles]);
+			(*numfiles)++;
+		}
+
+		i++;
+		result = alt_up_sd_card_find_next(buffer);
+	}
+
+	return 0;
+
 }

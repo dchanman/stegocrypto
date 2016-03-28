@@ -10,18 +10,32 @@
 #include "bitmap.h"
 #include "rgb.h"
 #include "graphics.h"
+#include "sdcard.h"
 #include "touchscreen.h"
 
 #define BASE	200
 
-static const char * filenames[] = {
-		"whitebox.bmp",
-		"redbox.bmp",
-		"greenbox.bmp",
-		"fancy.bmp",
-		"bluebox.bmp",
-		"logan.bmp"
-};
+static char * filenames[32];
+static int numfiles = 0;
+
+void bitmap_get_bitmap_filenames_from_sdcard() {
+	int i;
+
+	sdcard_init();
+
+	/* Free the old buffers for filenames before getting new ones */
+	for (i = 0; i < numfiles; i++) {
+		free(filenames[i]);
+	}
+
+	printf("[%s]: Getting files...\n", __func__);
+	sdcard_get_files(filenames, &numfiles, "/");
+	printf("[%s]: Got %d files\n", __func__, numfiles);
+
+	for (i = 0; i < numfiles; i++) {
+		printf("[%s]: (%d). %s (%p)\n", __func__, i, filenames[i], &filenames[i]);
+	}
+}
 
 int bitmap_display() {
 	char * bitmap;
@@ -42,6 +56,8 @@ int bitmap_display() {
 
 	touchscreen_init();
 
+	bitmap_get_bitmap_filenames_from_sdcard();
+
 	while (1) {
 		touchscreen_get_press(&pixel, 3000);
 		if (pixel.x > 400)
@@ -49,7 +65,10 @@ int bitmap_display() {
 		else
 			imageindex--;
 
-		result = bitmap_import_image(filenames[imageindex % 6], &bitmap, &imagefilesize, &bitmap_data_offset);
+		/* Make sure our index is always valid */
+		imageindex = imageindex % numfiles;
+
+		result = bitmap_import_image(filenames[imageindex], &bitmap, &imagefilesize, &bitmap_data_offset);
 		if (result != 0) {
 			printf("Error: Could not import image from SD card\n");
 			imageindex++;
