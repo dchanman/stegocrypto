@@ -22,7 +22,7 @@ void sprint1_demo();
 void savefile_test();
 void timer_test();
 void stego_engine_test();
+void xtea_engine_test();
 void rgb_test();
-
 
 #endif /* TEST_H_ */

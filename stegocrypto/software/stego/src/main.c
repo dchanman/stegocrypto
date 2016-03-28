@@ -41,9 +41,10 @@ int main() {
 	//project1_demo_initialize_savefile();
 	//project1_demo_main();
 	//journey_display_test();
-	//stego_engine_test("redbox.bmp", "output2.bmp");
+	//stego_engine_test("blackbox.bmp", "output2.bmp");
+	xtea_engine_test();
 	//rgb_test();
-	bitmap_display();
+	//bitmap_display();
 #endif
 
 	//main_controller_run();
