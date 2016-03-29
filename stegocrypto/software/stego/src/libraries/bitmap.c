@@ -166,7 +166,7 @@ int bitmap_draw(const char * bitmap) {
 
 	i = bitmap_data_offset;
 	/* Gotta draw the picture backwards to make it display upright on the VGA */
-	for (y = height; y > 0; y--) {
+	for (y = height - 1; y >= 0; y--) {
 		for (x = 0; x < width; x++) {
 			rgb.b = 0x000000FF & (bitmap[i]);
 			i++;
@@ -177,7 +177,7 @@ int bitmap_draw(const char * bitmap) {
 
 			/* Make sure we are only drawing what fits on the screen */
 			if (x < GRAPHICS_PIXEL_WIDTH && y < GRAPHICS_PIXEL_HEIGHT)
-				graphics_write_pixel(x, y, rgb_to_8bit(rgb.r, rgb.g, rgb.b));
+				graphics_write_pixel(x + 20, y + 20, rgb_to_8bit(rgb.r, rgb.g, rgb.b));
 		}
 	}
 
@@ -240,14 +240,18 @@ static int bitmap_draw_scaled(const char * bitmap, const int scaled_width, const
 	x_scale = (float)scaled_width / width;
 	y_scale = (float)scaled_height / height;
 
-	for (y = 0; y < scaled_height; y++) {
+	/* Bitmaps are stored left to right, bottom row to top row */
+	for (y = scaled_height - 1; y >= 0; y--) {
 		for (x = 0; x < scaled_width; x++) {
 			x_coord = x / x_scale;
 			y_coord = y / y_scale;
 
 			scaled_rgb = rgb[y_coord][x_coord];
 			/* Make sure we are only drawing what fits on the screen */
-			if (x < GRAPHICS_PIXEL_WIDTH && y < GRAPHICS_PIXEL_HEIGHT)
+			if (x + origin_x < GRAPHICS_PIXEL_WIDTH &&
+					y + origin_y < GRAPHICS_PIXEL_HEIGHT &&
+					x + origin_x >= 0 &&
+					y + origin_y >= 0)
 				graphics_write_pixel(x + origin_x, y + origin_y, rgb_to_8bit(scaled_rgb.r, scaled_rgb.g, scaled_rgb.b));
 		}
 	}
@@ -287,16 +291,16 @@ int bitmap_draw_centered_fullscreen(const char * bitmap) {
 
 	/* We have to pick the smaller factor to use */
 	if (x_scale < y_scale) {
-		width = GRAPHICS_PIXEL_WIDTH;
-		height *= x_scale;
+		width = GRAPHICS_PIXEL_WIDTH - 1;
+		height = (height * x_scale) - 1;
 	} else {
-		width *= y_scale;
-		height = GRAPHICS_PIXEL_HEIGHT;
+		width = (width * y_scale) - 1;
+		height = GRAPHICS_PIXEL_HEIGHT - 1;
 	}
 
 	/* Determine a starting origin for our image */
-	x_origin = (GRAPHICS_PIXEL_WIDTH - width) / 2;
-	y_origin = (GRAPHICS_PIXEL_HEIGHT - height) / 2;
+	x_origin = ((GRAPHICS_PIXEL_WIDTH - width) / 2) + 1;
+	y_origin = ((GRAPHICS_PIXEL_HEIGHT - height) / 2) + 1;
 
 	return bitmap_draw_scaled(bitmap, width, height, x_origin, y_origin);
 }

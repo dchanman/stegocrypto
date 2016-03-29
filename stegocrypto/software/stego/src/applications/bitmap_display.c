@@ -46,12 +46,13 @@ int bitmap_display() {
 	while (1) {
 		/* Hacky: By default, make the image index increment */
 		printf("[%s] Waiting for timer or touch...\n", __func__);
-		pixel.x = 401;
+		//pixel.x = 401;
 		touchscreen_get_press(&pixel, 3000);
-		if (pixel.x > 400)
-			imageindex++;
-		else
-			imageindex--;
+		imageindex++; /* TODO: fix the touchscreen... */
+		//if (pixel.x > 400)
+		//	imageindex++;
+		//else
+		//	imageindex--;
 
 		/* Make sure our index is always valid */
 		imageindex = imageindex % numfiles;
@@ -66,6 +67,7 @@ int bitmap_display() {
 		}
 
 		result = bitmap_draw_centered_fullscreen(bitmap);
+		//bitmap_draw(bitmap);
 
 		if (bitmap != NULL)
 			free(bitmap);
