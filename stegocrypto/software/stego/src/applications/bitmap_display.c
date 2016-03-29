@@ -13,7 +13,7 @@
 #include "sdcard.h"
 #include "touchscreen.h"
 
-#define BASE	200
+#define BASE	0
 
 static char * filenames[32];
 static int numfiles = 0;
@@ -85,11 +85,9 @@ int bitmap_display() {
 		graphics_clear_screen();
 
 		i = bitmap_data_offset;
-		/* Got some weird flippy stuff and rotation stuff with how BMP is stored */
-		//for (x = height+BASE; x > BASE; x--) {
-		//	for (y = BASE; y < width+BASE; y++) {
-		for (y = BASE; y < height+BASE; y++) {
-			for (x = BASE; x < width+BASE; x++) {
+		/* Gotta draw the picture backwards to make it display upright on the VGA */
+		for (y = height+BASE; y > BASE; y--) {
+			for (x = width+BASE; x > BASE; x--) {
 				b = 0x000000FF & (bitmap[i]);
 				i++;
 				g = 0x000000FF & (bitmap[i]);
