@@ -8,7 +8,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "bitmap.h"
+#include "rgb.h"
+#include "graphics.h"
 #include "sdcard.h"
+
+#define BASE_X	0
+#define BASE_Y	0
 
 int bitmap_import_image(const char * filename, char ** data_out, int * length, int * data_start_offset) {
 	char header[STEGO_ENGINE_BMP_HEADER_SIZE];
@@ -130,3 +135,44 @@ int bitmap_process_header(const char * header, int * imagefilesize, int * data_s
 	return 0;
 }
 
+int bitmap_draw(const char * bitmap) {
+	int result;
+	int imagefilesize;
+	int bitmap_data_offset;
+	int width;
+	int height;
+	int i;
+
+	int x = 0;
+	int y = 0;
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+
+	result = bitmap_process_header(bitmap, &imagefilesize, &bitmap_data_offset, &width, &height);
+	if (result != 0) {
+		return result;
+	}
+
+	printf("Image width: %d\nImage height: %d\n", width, height);
+	graphics_clear_screen();
+
+	i = bitmap_data_offset;
+	/* Gotta draw the picture backwards to make it display upright on the VGA */
+	for (y = height + BASE_Y; y > BASE_Y; y--) {
+		for (x = 0; x < width + BASE_X; x++) {
+			b = 0x000000FF & (bitmap[i]);
+			i++;
+			g = 0x000000FF & (bitmap[i]);
+			i++;
+			r = 0x000000FF & (bitmap[i]);
+			i++;
+
+			/* Make sure we are only drawing what fits on the screen */
+			if (x < GRAPHICS_PIXEL_WIDTH && y < GRAPHICS_PIXEL_HEIGHT)
+				graphics_write_pixel(x, y, rgb_to_8bit(r, g, b));
+		}
+	}
+
+	return 0;
+}
