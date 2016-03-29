@@ -45,6 +45,7 @@ int bitmap_display() {
 
 	while (1) {
 		/* Hacky: By default, make the image index increment */
+		printf("[%s] Waiting for timer or touch...\n", __func__);
 		pixel.x = 401;
 		touchscreen_get_press(&pixel, 3000);
 		if (pixel.x > 400)
@@ -57,15 +58,18 @@ int bitmap_display() {
 
 		printf("[%s] Drawing (%d) <%s>\n", __func__, imageindex, filenames[imageindex]);
 
+		bitmap = NULL;
 		result = bitmap_import_image(filenames[imageindex], &bitmap, &imagefilesize, &bitmap_data_offset);
 		if (result != 0) {
 			printf("Error: Could not import image from SD card\n");
 			continue;
 		}
 
-		result = bitmap_draw(bitmap);
+		result = bitmap_draw_centered_fullscreen(bitmap);
 
-		free(bitmap);
+		if (bitmap != NULL)
+			free(bitmap);
+
 	}
 	return 0;
 }
