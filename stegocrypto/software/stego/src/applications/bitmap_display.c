@@ -21,8 +21,6 @@ static int numfiles = 0;
 void bitmap_get_bitmap_filenames_from_sdcard() {
 	int i;
 
-	sdcard_init();
-
 	/* Free the old buffers for filenames before getting new ones */
 	for (i = 0; i < numfiles; i++) {
 		free(filenames[i]);
@@ -37,22 +35,53 @@ void bitmap_get_bitmap_filenames_from_sdcard() {
 	}
 }
 
-int bitmap_display() {
-	char * bitmap;
-	int bitmap_data_offset;
+int bitmap_draw(const char * bitmap) {
+	int result;
 	int imagefilesize;
+	int bitmap_data_offset;
 	int width;
 	int height;
 	int i;
-	int result;
-	unsigned int imageindex = 0;
-	Pixel pixel;
 
 	int x = 0;
 	int y = 0;
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
+
+	result = bitmap_process_header(bitmap, &imagefilesize, &bitmap_data_offset, &width, &height);
+	if (result != 0) {
+		return result;
+	}
+
+	printf("Image width: %d\nImage height: %d\n", width, height);
+	graphics_clear_screen();
+
+	i = bitmap_data_offset;
+	/* Gotta draw the picture backwards to make it display upright on the VGA */
+	for (y = height + BASE; y > BASE; y--) {
+		for (x = width + BASE; x > BASE; x--) {
+			b = 0x000000FF & (bitmap[i]);
+			i++;
+			g = 0x000000FF & (bitmap[i]);
+			i++;
+			r = 0x000000FF & (bitmap[i]);
+			i++;
+
+			graphics_write_pixel(x, y, rgb_to_8bit(r, g, b));
+		}
+	}
+
+	return 0;
+}
+
+int bitmap_display() {
+	char * bitmap;
+	int imagefilesize;
+	int bitmap_data_offset;
+	int result;
+	unsigned int imageindex = 0;
+	Pixel pixel;
 
 	touchscreen_init();
 
@@ -75,29 +104,7 @@ int bitmap_display() {
 			continue;
 		}
 
-		result = bitmap_process_header(bitmap, &imagefilesize, &bitmap_data_offset, &width, &height);
-		if (result != 0) {
-			free(bitmap);
-			continue;
-		}
-
-		printf("Image width: %d\nImage height: %d\n", width, height);
-		graphics_clear_screen();
-
-		i = bitmap_data_offset;
-		/* Gotta draw the picture backwards to make it display upright on the VGA */
-		for (y = height+BASE; y > BASE; y--) {
-			for (x = width+BASE; x > BASE; x--) {
-				b = 0x000000FF & (bitmap[i]);
-				i++;
-				g = 0x000000FF & (bitmap[i]);
-				i++;
-				r = 0x000000FF & (bitmap[i]);
-				i++;
-
-				graphics_write_pixel(x, y, rgb_to_8bit(r, g, b));
-			}
-		}
+		result = bitmap_draw(bitmap);
 
 		free(bitmap);
 	}

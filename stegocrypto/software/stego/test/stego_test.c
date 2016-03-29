@@ -33,6 +33,8 @@ int stego_engine_test(const char * filename, const char * output_filename) {
 	int extracted_length;
 	int result;
 
+	sdcard_init();
+
 	result = bitmap_import_image(filename, &imagedata, &imagelength, &offset);
 	if (result != 0) {
 		printf("Error with importing image\n");

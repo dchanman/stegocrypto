@@ -8,17 +8,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "bitmap.h"
+#include "sdcard.h"
 
 int bitmap_import_image(const char * filename, char ** data_out, int * length, int * data_start_offset) {
 	char header[STEGO_ENGINE_BMP_HEADER_SIZE];
+	char filename_buffer[32];
 	char * filedata;
 	short int fh;
-	int i;
 	int read;
 	int h;
 	int w;
 
-	sdcard_init();
+	snprintf(filename_buffer, sizeof(filename_buffer), "%s", filename);
 
 	if (sdcard_open(&fh, filename)) {
 		printf("Could not open\n");
@@ -30,13 +31,7 @@ int bitmap_import_image(const char * filename, char ** data_out, int * length, i
 		return -1;
 	}
 
-	for (i = 0; i < 14; i++) {
-		printf("%02X ", header[i] & 0x00FF);
-	}
-
 	bitmap_process_header(header, length, data_start_offset, &w, &h);
-
-	printf("Filesize: %d bytes\n", *length);
 
 	filedata = malloc((*length)*sizeof(char));
 	if (filedata == NULL) {
@@ -45,9 +40,7 @@ int bitmap_import_image(const char * filename, char ** data_out, int * length, i
 	}
 	memset(filedata, '\0', (*length)*sizeof(char));
 
-	printf("Sufficient memory available\n");
-
-	/* Copy in the whole file */
+	/* Copy in the whole file. We close and reopen the file instead of doing a fseek */
 	sdcard_close(fh);
 	if (sdcard_open(&fh, filename)) {
 		printf("Could not open\n");

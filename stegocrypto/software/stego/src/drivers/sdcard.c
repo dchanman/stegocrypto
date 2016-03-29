@@ -15,50 +15,50 @@
 static alt_up_sd_card_dev *device_reference = NULL;
 
 int sdcard_init() {
-	printf("Opening SDCard\n");
+	printf("[%s]: Opening SDCard\n", __func__);
 	device_reference = alt_up_sd_card_open_dev(SDCARD_DEV);
 	if (device_reference == NULL) {
-		printf("Error: Could not open SDCard\n");
+		printf("[%s]: Error: Could not open SDCard\n", __func__);
 		return -1;
 	}
 
-	printf("Opened SDCard\n");
+	printf("[%s]: Opened SDCard\n", __func__);
 	return 0;
 }
 
 int sdcard_open(short int * filehandle, char * filename)
 {
 	if (device_reference == NULL) {
-		printf("Error: SDCard not open\n");
+		printf("[%s]: Error: SDCard not open\n", __func__);
 		return -1;
 	}
 
 	if (!alt_up_sd_card_is_Present()) {
-		printf("Error: SDCard not present\n");
+		printf("[%s]: Error: SDCard not present\n", __func__);
 		device_reference = NULL;
 		return -1;
 	}
 
 	if (!alt_up_sd_card_is_FAT16()) {
-		printf("Error: SDCard is not FAT16 format\n");
+		printf("[%s]: Error: SDCard is not FAT16 format\n", __func__);
 		return -1;
 	}
 
 	/* Try to create the file */
 	*filehandle = alt_up_sd_card_fopen(filename, true);
 	if (*filehandle == -1) {
-		//printf("Info: Could not create file <%s>, trying to open file instead...\n", filename);
+		//printf("[%s]: Info: Could not create file <%s>, trying to open file instead...\n", __func__, filename);
 
 		/* Maybe the file exists, try opening it instead */
 		*filehandle = alt_up_sd_card_fopen(filename, false);
 		if (*filehandle == -1) {
-			printf("Error: Could not open file <%s>\n", filename);
+			printf("[%s]: Error: Could not open file <%s>\n", __func__, filename);
 			return -1;
 		} else {
-			printf("Opened file <%s>\n", filename);
+			//printf("[%s]: Opened file <%s>\n", __func__, filename);
 		}
 	} else {
-		printf("Created file <%s>\n", filename);
+		printf("[%s]: Created file <%s>\n", __func__, filename);
 	}
 
 	return 0;
@@ -67,21 +67,21 @@ int sdcard_open(short int * filehandle, char * filename)
 int sdcard_close(short int filehandle)
 {
 	if (device_reference == NULL) {
-		printf("Error: SDCard not open\n");
+		printf("[%s]: Error: SDCard not open\n", __func__);
 		return -1;
 	}
 
 	if (filehandle == -1) {
-		printf("Error: File handle not open\n");
+		printf("[%s]: Error: File handle not open\n", __func__);
 		return -1;
 	}
 
 	if (!alt_up_sd_card_fclose(filehandle)) {
-		printf("Error: Could not close filehandle\n");
+		printf("[%s]: Error: Could not close filehandle\n", __func__);
 		return -1;
 	}
 
-	printf("Closed SDCard file\n");
+	//printf("[%s]: Closed SDCard file\n", __func__);
 
 	return 0;
 }
@@ -91,31 +91,31 @@ int sdcard_write(const short int filehandle, const char * data, const int data_l
 	int i;
 
 	if (device_reference == NULL) {
-		printf("Error: SDCard not open\n");
+		printf("[%s]: Error: SDCard not open\n", __func__);
 		return -1;
 	}
 
 	if (!alt_up_sd_card_is_Present()) {
-		printf("Error: SDCard not present\n");
+		printf("[%s]: Error: SDCard not present\n", __func__);
 		device_reference = NULL;
 		return -1;
 	}
 
 	if (filehandle == -1) {
-		printf("Error: File handle not open\n");
+		printf("[%s]: Error: File handle not open\n", __func__);
 		return -1;
 	}
 
 	/* Write data to the SDCard */
 	for (i = 0; i < data_length; i++) {
 		//if (i % 0x0000FFFF == 0)
-		//	printf("%08X: %02X\n", i, data[i]);
+		//	printf("[%s]: %08X: %02X\n", __func__, i, data[i]);
 		if (alt_up_sd_card_write(filehandle, data[i]) == false) {
-			printf("Error: Could not write to file. Aborting write\n");
+			printf("[%s]: Error: Could not write to file. Aborting write\n", __func__);
 			break;
 		}
 	}
-	printf("Finished writing %d bytes (%08X)\n", i, i);
+	printf("[%s]: Finished writing %d bytes (%08X)\n", __func__, i, i);
 
 	return i;
 }
@@ -135,18 +135,18 @@ int sdcard_readstr(const short int filehandle, char * buffer, const int num)
 	int i = -1;
 
 	if (device_reference == NULL) {
-		printf("Error: SDCard not open\n");
+		printf("[%s]: Error: SDCard not open\n", __func__);
 		return -1;
 	}
 
 	if (!alt_up_sd_card_is_Present()) {
-		printf("Error: SDCard not present\n");
+		printf("[%s]: Error: SDCard not present\n", __func__);
 		device_reference = NULL;
 		return -1;
 	}
 
 	if (filehandle == -1) {
-		printf("Error: File handle not open\n");
+		printf("[%s]: Error: File handle not open\n", __func__);
 		return -1;
 	}
 
@@ -154,12 +154,12 @@ int sdcard_readstr(const short int filehandle, char * buffer, const int num)
 	for (i = 0; i < num; i++) {
 		buffer[i] = (char)alt_up_sd_card_read(filehandle);
 		if (buffer[i] == -1) {
-			printf("Error: File handle was invalid\n");
+			printf("[%s]: Error: File handle was invalid\n", __func__);
 			return -1;
 		}
 
 		if (buffer[i] == -2) {
-			printf("Error: Unable to read from SD Card\n");
+			printf("[%s]: Error: Unable to read from SD Card\n", __func__);
 			return -1;
 		}
 
@@ -178,18 +178,18 @@ int sdcard_read(const short int filehandle, char * buffer, const int num)
 	short int result;
 
 	if (device_reference == NULL) {
-		printf("Error: SDCard not open\n");
+		printf("[%s]: Error: SDCard not open\n", __func__);
 		return -1;
 	}
 
 	if (!alt_up_sd_card_is_Present()) {
-		printf("Error: SDCard not present\n");
+		printf("[%s]: Error: SDCard not present\n", __func__);
 		device_reference = NULL;
 		return -1;
 	}
 
 	if (filehandle == -1) {
-		printf("Error: File handle not open\n");
+		printf("[%s]: Error: File handle not open\n", __func__);
 		return -1;
 	}
 
@@ -197,12 +197,12 @@ int sdcard_read(const short int filehandle, char * buffer, const int num)
 	for (i = 0; i < num; i++) {
 		result = alt_up_sd_card_read(filehandle);
 		if (result == -1) {
-			printf("Error: File handle was invalid on read <%d> (%08X)\n", i, i);
+			printf("[%s]: Error: File handle was invalid on read <%d> (%08X)\n", __func__, i, i);
 			return -1;
 		}
 
 		if (result == -2) {
-			printf("Error: Unable to read from SD Card\n");
+			printf("[%s]: Error: Unable to read from SD Card\n", __func__);
 			return -1;
 		}
 		buffer[i] = (char)result;
@@ -216,18 +216,18 @@ int sdcard_readln(const short int filehandle, char * buffer, const int buffer_si
 	int i = 0;
 
 	if (device_reference == NULL) {
-		printf("Error: SDCard not open\n");
+		printf("[%s]: Error: SDCard not open\n", __func__);
 		return -1;
 	}
 
 	if (!alt_up_sd_card_is_Present()) {
-		printf("Error: SDCard not present\n");
+		printf("[%s]: Error: SDCard not present\n", __func__);
 		device_reference = NULL;
 		return -1;
 	}
 
 	if (filehandle == -1) {
-		printf("Error: File handle not open\n");
+		printf("[%s]: Error: File handle not open\n", __func__);
 		return -1;
 	}
 
@@ -235,12 +235,12 @@ int sdcard_readln(const short int filehandle, char * buffer, const int buffer_si
 	for (i = 0; i < buffer_size; i++) {
 		buffer[i] = (char)alt_up_sd_card_read(filehandle);
 		if (buffer[i] == -1) {
-			printf("Error: File handle was invalid\n");
+			printf("[%s]: Error: File handle was invalid\n", __func__);
 			return -1;
 		}
 
 		if (buffer[i] == -2) {
-			printf("Error: Unable to read from SD Card\n");
+			printf("[%s]: Error: Unable to read from SD Card\n", __func__);
 			return -1;
 		}
 
@@ -295,7 +295,6 @@ int sdcard_get_files(char ** filelist, int * numfiles, const char * directory) {
 		 */
 		if (strstr(buffer, ".") != NULL) {
 			filelist[*numfiles] = strdup(buffer);
-			printf("[%s]: \t(%d) %s (%p)\n", __func__, *numfiles, filelist[*numfiles], &filelist[*numfiles]);
 			(*numfiles)++;
 		}
 
