@@ -46,7 +46,9 @@ void timer_init(const int timer_id, const timer_type_t timer_type, alt_isr_func 
 
 	/* Configure interrupts */
 	alt_irq_register(timer_irq_map[timer_id], NULL, isr);
-	alt_irq_disable(timer_irq_map[timer_id]);
+
+	/* Enable interrupts */
+	alt_irq_enable(timer_irq_map[timer_id]);
 }
 
 void timer_set(const int timer_id, const int millis) {
@@ -73,9 +75,6 @@ void timer_start(const int timer_id) {
 		return;
 	}
 
-	/* Enable interrupts */
-	alt_irq_enable(timer_irq_map[timer_id]);
-
 	setting = IORD_ALTERA_AVALON_TIMER_CONTROL(timer_base_map[timer_id]);
 	setting &= 0x0007; // set STOP to 0
 	setting |= 0x0004; // set START to 1
@@ -89,9 +88,6 @@ void timer_stop(const int timer_id) {
 		printf("[%s]: Error: timer_id out of range.\n", __func__);
 		return;
 	}
-
-	/* Disable interrupts */
-	alt_irq_disable(timer_irq_map[timer_id]);
 
 	setting = IORD_ALTERA_AVALON_TIMER_CONTROL(timer_base_map[timer_id]);
 	setting |= 0x0008; // set STOP to 1
