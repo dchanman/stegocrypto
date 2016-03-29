@@ -48,4 +48,27 @@ int bitmap_export_image(const char * filename, const char * data, const int leng
  */
 int bitmap_process_header(const char * header, int * imagefilesize, int * data_start_offset, int * width, int * height);
 
+/**
+ * Draws a bitmap over VGA
+ *
+ * This function processes the bitmap header. You only need to pass in the
+ * char array data_out from bitmap_import_image.
+ *
+ * @param[in] bitmap - data from bitmap_import_image
+ * @return 0 on success, -1 on error
+ */
+int bitmap_draw(const char * bitmap);
+
+/**
+ * Draws a bitmap to the VGA. The dimensions will be scaled to fill the screen
+ * and the image will be centered.
+ *
+ * This function processes the bitmap header. You only need to pass in the
+ * char array data_out from bitmap_import_image.
+ *
+ * @param[in] bitmap - data from bitmap_import_image
+ * @return 0 on success, -1 on error
+ */
+int bitmap_draw_centered_fullscreen(const char * bitmap);
+
 #endif /* BITMAP_H_ */

@@ -11,10 +11,31 @@
 #include "bitmap_display.h"
 #include "test.h"
 #include "project1_demo.h"
+#include "sdcard.h"
+#include "rgb.h"
 #endif
 
 int main() {
-	printf("Minecraft GO\n");
+	printf("StegoCrypto\n");
+	/* ASCII Art credit: http://www.asciiworld.com/-Dinosaurs-.html */
+	printf(
+			"                                .\n"
+			"                        / `.   .' \\\n"
+			"                .---.  <    > <    >  .---.\n"
+			"                |    \\  \\ - ~ ~ - /  /    |\n"
+			"                 ~-..-~             ~-..-~\n"
+			"             \\~~~\\.'                    `./~~~/\n"
+			"              \\__/                        \\__/\n"
+			"               /                  .-    .  \\\n"
+			"        _._ _.-    .-~ ~-.       /       }   \\/~~~/\n"
+			"    _.-'q  }~     /       }     {        ;    \\__/\n"
+			"   {'__,  /      (       /      {       /      `. ,~~|   .     .\n"
+			"    `''''='~~-.__(      /_      |      /- _      `..-'   \\\\   //\n"
+			"                / \\   =/  ~~--~~{    ./|    ~-.     `-..__\\\\_//_.-'\n"
+			"               {   \\  +\\         \\  =\\ (        ~ - . _ _ _..---~\n"
+			"               |  | {   }         \\   \\_\\\n"
+			"              '---.o___,'       .o___,'\n"
+	);
 
 #ifdef TESTING
 	/* Uncomment the feature you want to test */
@@ -42,9 +63,11 @@ int main() {
 	//project1_demo_main();
 	//journey_display_test();
 	//stego_engine_test("blackbox.bmp", "output2.bmp");
-	xtea_engine_test();
+	//xtea_engine_test();
 	//rgb_test();
-	//bitmap_display();
+	rgb_init();
+	sdcard_init();
+	bitmap_display();
 #endif
 
 	//main_controller_run();

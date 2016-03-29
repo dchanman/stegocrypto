@@ -81,4 +81,16 @@ int sdcard_read(const short int filehandle, char * buffer, const int num);
  */
 int sdcard_readln(const short int filehandle, char * buffer, const int buffer_size);
 
+/**
+ * Gets a list of files from a directory on the sdcard
+ *
+ * Note that filelist's indices will point to allocated memory that needs to be freed
+ * when no longer needed.
+ *
+ * @param[inout] filelist - list of file names
+ * @param[out] numfiles - number of files
+ * @param[in] directory - directory to search
+ */
+int sdcard_get_files(char ** filelist, int * numfiles, const char * directory);
+
 #endif /* SDCARD_H_ */
