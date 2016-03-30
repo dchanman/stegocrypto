@@ -24,5 +24,6 @@ void timer_test();
 void stego_engine_test();
 void xtea_engine_test();
 void rgb_test();
+void geoencryption_engine_test();
 
 #endif /* TEST_H_ */
