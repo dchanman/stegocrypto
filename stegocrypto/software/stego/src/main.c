@@ -13,6 +13,7 @@
 #include "project1_demo.h"
 #include "sdcard.h"
 #include "rgb.h"
+#include "geoencryption_engine.h"
 #endif
 
 int main() {
@@ -65,9 +66,12 @@ int main() {
 	//stego_engine_test("blackbox.bmp", "output2.bmp");
 	//xtea_engine_test();
 	//rgb_test();
-	rgb_init();
-	sdcard_init();
-	bitmap_display();
+
+	 geoencryption_engine_test();
+
+	//rgb_init();
+	//sdcard_init();
+	//bitmap_display();
 #endif
 
 	//main_controller_run();
