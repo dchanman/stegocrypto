@@ -191,6 +191,7 @@ static int bitmap_draw_scaled(const char * bitmap, const int scaled_width, const
 	int width;
 	int height;
 	int i;
+	int padding;
 
 	int x = 0;
 	int y = 0;
@@ -234,6 +235,10 @@ static int bitmap_draw_scaled(const char * bitmap, const int scaled_width, const
 			rgb[y][x].r = 0x000000FF & (bitmap[i]);
 			i++;
 		}
+
+		/* We have to account for the padding */
+		padding = (width * 3) % 4;
+		i += padding;
 	}
 
 	/* Determine our scaling factors */
