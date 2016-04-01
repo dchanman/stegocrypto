@@ -31,10 +31,10 @@ entity GraphicsController is
 		HScrollValue 									: out Std_Logic_Vector(9 downto 0);  			-- scroll value for terminal emulation (allows screen scrolling left/right) currently not used
 
 -- Data bus back to CPU		
-		DataOutToCPU									: out Std_Logic_Vector(15 downto 0);			-- 16 bit data bus back to Bridge/NIOS when reading from graphis
+		DataOutToCPU									: out Std_Logic_Vector(15 downto 0);			-- 16 bit data bus back to Bridge/NIOS when reading from graphics
 
 -- Memory output signals
--- Memory holds the graphics image that we see and draw - we have to dri these signals to create the image as part of a state machine
+-- Memory holds the graphics image that we see and draw - we have to dri these ksignals to create the image as part of a state machine
 -- Memory is 16 wide, split into 2 x 8 bit halves
 -- each location is thus 2 bytes and holds two pixels from our image
 		
@@ -95,10 +95,13 @@ architecture bhvr of GraphicsController is
 	Signal 	Sig_AddressOut 																	: Std_Logic_Vector(17 downto 0);
 	Signal 	Sig_DataOut 																		: Std_Logic_Vector(15 downto 0); 
 	Signal 	Sig_UDS_Out_L, 
-				Sig_LDS_Out_L, 
-				Sig_RW_Out, 
-				Sig_CE_L,Sig_CE_Temp_L,Sig_UDS_Out_temp_L, Sig_LDS_Out_temp_L,
-				Sig_OE_L, Sig_RW_Out_temp														: Std_Logic;
+			Sig_LDS_Out_L, 
+			Sig_RW_Out, 
+			Sig_CE_L,Sig_CE_Temp_L,Sig_UDS_Out_temp_L, Sig_LDS_Out_temp_L,
+			Sig_OE_L, Sig_RW_Out_temp														: Std_Logic;
+	
+
+
 	Signal	Sig_Busy_H																			: Std_Logic;
 	
 	Signal	Colour_Latch_Load_H																: Std_Logic;
@@ -120,7 +123,7 @@ architecture bhvr of GraphicsController is
 -- States and signals for state machine
 -------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	-- signals that hold the current state and next state of your state machine at the heart of our graphcis controller
+	-- signals that hold the current state and next state of your state machine at the heart of our graphics controller
 	Signal 	CurrentState, 
 				NextState 			: Std_Logic_Vector(7 downto 0);
 	 

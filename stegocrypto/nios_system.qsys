@@ -72,14 +72,6 @@
          type = "String";
       }
    }
-   element stego_engine_0.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "4128";
-         type = "String";
-      }
-   }
    element to_external_bus_bridge_0.avalon_slave
    {
       datum _lockedAddress
@@ -90,6 +82,14 @@
       datum baseAddress
       {
          value = "67108864";
+         type = "String";
+      }
+   }
+   element stego_engine_0.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "4128";
          type = "String";
       }
    }
@@ -231,7 +231,7 @@
          type = "int";
       }
    }
-   element pio_7.s1
+   element pio_4.s1
    {
       datum _lockedAddress
       {
@@ -240,7 +240,7 @@
       }
       datum baseAddress
       {
-         value = "4256";
+         value = "4368";
          type = "String";
       }
    }
@@ -257,6 +257,32 @@
          type = "String";
       }
    }
+   element pio_5.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4352";
+         type = "String";
+      }
+   }
+   element onchip_memory2_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
+      }
+   }
    element pio_0.s1
    {
       datum _lockedAddress
@@ -270,7 +296,7 @@
          type = "String";
       }
    }
-   element pio_4.s1
+   element pio_1.s1
    {
       datum _lockedAddress
       {
@@ -279,7 +305,20 @@
       }
       datum baseAddress
       {
-         value = "4368";
+         value = "4160";
+         type = "String";
+      }
+   }
+   element pio_6.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4272";
          type = "String";
       }
    }
@@ -296,7 +335,7 @@
          type = "String";
       }
    }
-   element pio_6.s1
+   element pio_3.s1
    {
       datum _lockedAddress
       {
@@ -305,7 +344,7 @@
       }
       datum baseAddress
       {
-         value = "4272";
+         value = "4192";
          type = "String";
       }
    }
@@ -335,7 +374,7 @@
          type = "String";
       }
    }
-   element pio_1.s1
+   element pio_7.s1
    {
       datum _lockedAddress
       {
@@ -344,46 +383,7 @@
       }
       datum baseAddress
       {
-         value = "4160";
-         type = "String";
-      }
-   }
-   element pio_5.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4352";
-         type = "String";
-      }
-   }
-   element pio_3.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4192";
-         type = "String";
-      }
-   }
-   element onchip_memory2_0.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "0";
+         value = "4256";
          type = "String";
       }
    }
@@ -442,7 +442,7 @@
  <parameter name="projectName" value="NIOS_II_System.qpf" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1458084665380" />
+ <parameter name="timeStamp" value="1459474232487" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />

@@ -71,6 +71,10 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 	char bit;
 	int bitcount;
 
+
+	//ImageData points to address space. In hardware we should increment the address until image_offset = 0 
+	//then read data from that address space. 
+
 	if (imagedata == NULL || data == NULL) {
 		printf("NULL pointer\n");
 		return;
@@ -103,7 +107,7 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 		/* Increment the imagedata index */
 		i++;
 
-		/* Bitshift the byte to prepare te next bit */
+		/* Bitshift the byte to prepare the next bit */
 		byte = byte >> 1;
 	}
 
@@ -125,7 +129,7 @@ void stego_engine_embed_sw(char * imagedata, const char * data, const int datale
 			/* Increment the imagedata index */
 			i++;
 
-			/* Bitshift the byte to prepare te next bit */
+			/* Bitshift the byte to prepare the next bit */
 			byte = byte >> 1;
 		}
 	}
