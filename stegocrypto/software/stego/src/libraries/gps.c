@@ -430,6 +430,7 @@ void gps_checksum(char *string, int size) {
 	printf("Checksum: %x \n", result);
 }
 
+#ifdef UNNEEDED
 //------------------------- FOR PARSING DATA DUMP-----------------------------//
 
 // see http://stackoverflow.com/questions/2182002/convert-big-endian-to-
@@ -468,4 +469,5 @@ static char * gps_float_to_longitude_conversion(int x) // output format is (-)xx
 	sprintf(buff, "%3.4f", f);
 	return buff;
 }
+#endif
 

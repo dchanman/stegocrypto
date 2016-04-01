@@ -89,7 +89,7 @@ static int xtea_engine_char_array_to_xtea_array(const char * chars, const int ch
 
 	padded_char_buffer = malloc(sizeof(char) * new_char_length);
 	if (padded_char_buffer == NULL) {
-		printf("Out of memory!\n");
+		printf("[%s] Out of memory!\n", __func__);
 		return 1;		
 	}
 	memset(padded_char_buffer, '\0', new_char_length);
@@ -112,7 +112,7 @@ static int xtea_engine_xtea_array_to_char_array(const unsigned int * uint32ts, c
 	output_length = uint32_length * 4;
 	output = malloc(sizeof(char) * output_length);
 	if (output == NULL) {
-		printf("Out of memory!\n");
+		printf("[%s] Out of memory!\n", __func__);
 		return 1;
 	}
 	

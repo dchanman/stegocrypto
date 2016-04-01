@@ -79,6 +79,9 @@ void timer_start(const int timer_id) {
 	setting &= 0x0007; // set STOP to 0
 	setting |= 0x0004; // set START to 1
 	IOWR_ALTERA_AVALON_TIMER_CONTROL(timer_base_map[timer_id], setting);
+
+	/* Enable interrupts */
+	alt_irq_enable(timer_irq_map[timer_id]);
 }
 
 void timer_stop(const int timer_id) {
@@ -93,6 +96,9 @@ void timer_stop(const int timer_id) {
 	setting |= 0x0008; // set STOP to 1
 	setting &= 0x000B; // set START to 0
 	IOWR_ALTERA_AVALON_TIMER_CONTROL(timer_base_map[timer_id], setting);
+
+	/* Enable interrupts */
+	alt_irq_disable(timer_irq_map[timer_id]);
 }
 
 boolean timer_is_running(const int timer_id) {

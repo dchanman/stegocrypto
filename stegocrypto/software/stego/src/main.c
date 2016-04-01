@@ -67,11 +67,12 @@ int main() {
 	//xtea_engine_test();
 	//rgb_test();
 
-	 geoencryption_engine_test();
+	//geoencryption_engine_test();
 
 	//rgb_init();
 	//sdcard_init();
 	//bitmap_display();
+	stegocrypto_test_embed();
 #endif
 
 	//main_controller_run();
