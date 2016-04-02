@@ -188,6 +188,8 @@ C_SRCS += src/libraries/stego_engine.c
 C_SRCS += src/libraries/stegocrypto_engine.c
 C_SRCS += src/libraries/xtea_engine.c
 C_SRCS += src/applications/main_controller.c
+C_SRCS += src/libraries/picture_transfer.c
+C_SRCS += test/picture_transfer_test.c
 CXX_SRCS :=
 ASM_SRCS :=
 
