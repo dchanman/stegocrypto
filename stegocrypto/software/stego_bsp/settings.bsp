@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 17, 2016 3:46:51 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458254811404</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Apr 6, 2016 9:53:57 AM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1459961637588</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/derek/projects/stegocrypto/stegocrypto/software/stego_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../nios_system.sopcinfo</SopcDesignFile>

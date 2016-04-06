@@ -1,3 +1,4 @@
+
 /*
  * data_transfer_test.c
  *
@@ -12,8 +13,9 @@
 //#define SENDING_TESTING
 
 //test entire communication
-#define COMMUNICATION_TESTING
+//#define COMMUNICATION_TESTING
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -22,15 +24,19 @@
 void data_transfer_test() {
 	data_transfer_init();
 
-	#ifdef RECEIVING_TESTING
 		unsigned char * recv_msg = NULL;
-		memset(recv_msg, '\0', sizeof(recv_msg));
-		data_transfer_receive(recv_msg);
-	#endif
+		data_transfer_receive(&recv_msg);
+		printf("Received %s\n", recv_msg);
+		printf("Done receiving\n");
+
+		printf("Test sending\n");
+		data_transfer_send(recv_msg, strlen(recv_msg) + 1);
+		free(recv_msg);
+		printf("Done\n");
 
 	#ifdef SENDING_TESTING
-		const unsigned char *filename = "test.bmp";
-		data_transfer_send(filename);
+		const unsigned char * msg = "hello this is my msg";
+		data_transfer_send(msg, strlen(msg) + 1);
 	#endif
 
 	#ifdef COMMUNICATION_TESTING
