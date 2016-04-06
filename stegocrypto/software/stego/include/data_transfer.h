@@ -13,10 +13,10 @@
 #define DATA_LENGTH_CONST 1
 
 //constants to determine stage for case statement
-#define WAIT 1
-#define STRING_LENGTH 2
-#define MESSAGE_LENGTH 3
-#define FINAL 4
+#define STAGE_WAIT 1
+#define STAGE_STRING_LENGTH 2
+#define STAGE_MESSAGE_LENGTH 3
+#define STAGE_FINAL 4
 
 /*
  * Initialize the bluetooth
@@ -38,7 +38,7 @@ void data_transfer_init();
  *
  * @param recv_msg - pointer to a message that will be received
  */
-void data_transfer_receive(unsigned char *recv_msg);
+void data_transfer_receive(unsigned char ** recv_msg);
 
 /*
  * Sends a message using the serial port over bluetooth
@@ -47,6 +47,6 @@ void data_transfer_receive(unsigned char *recv_msg);
  * @param send_msg_length - pointer to length of message
  * @param length_of_send_msg_length - pointer to number of characters in send_msg_length
  */
-void data_transfer_send(unsigned char *filename);
+void data_transfer_send(unsigned char *imagedata, const int datalength);
 
 #endif /* DATA_TRANSFER_H_ */

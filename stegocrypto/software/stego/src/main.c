@@ -72,9 +72,9 @@ int main() {
 	//rgb_init();
 	//sdcard_init();
 	//bitmap_display();
-	stegocrypto_test_embed();
+	//stegocrypto_test_embed();
 	//picture_transfer_test();
-	//data_transfer_test();
+	data_transfer_test();
 #endif
 
 	//main_controller_run();
