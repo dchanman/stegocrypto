@@ -74,6 +74,7 @@ int main() {
 	//bitmap_display();
 	//stegocrypto_test_embed();
 	//picture_transfer_test();
+	//bluetooth_test();
 	data_transfer_test();
 #endif
 

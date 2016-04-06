@@ -10,7 +10,7 @@
 //#define RECEIVING_TESTING
 
 //test sending message
-#define SENDING_TESTING
+//#define SENDING_TESTING
 
 //test entire communication
 //#define COMMUNICATION_TESTING
@@ -24,13 +24,15 @@
 void data_transfer_test() {
 	data_transfer_init();
 
-	#ifdef RECEIVING_TESTING
 		unsigned char * recv_msg = NULL;
 		data_transfer_receive(&recv_msg);
 		printf("Received %s\n", recv_msg);
+		printf("Done receiving\n");
+
+		printf("Test sending\n");
+		data_transfer_send(recv_msg, strlen(recv_msg) + 1);
 		free(recv_msg);
-		printf("Done!!!!!\n");
-	#endif
+		printf("Done\n");
 
 	#ifdef SENDING_TESTING
 		const unsigned char * msg = "hello this is my msg";

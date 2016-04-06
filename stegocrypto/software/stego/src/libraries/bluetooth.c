@@ -28,38 +28,37 @@ void bluetooth_put_char(const unsigned char c) {
 }
 
 unsigned char bluetooth_get_char() {
-	usleep(1000);
+	//usleep(1000);
 	return serial_get_char(BLUETOOTH);
 }
 
 void bluetooth_get_n_char(unsigned char *recv_msg, const int recv_msg_length) {
-	usleep(1000000);
 	serial_get_n_char(BLUETOOTH, recv_msg, recv_msg_length);
 }
 
 void bluetooth_send_command(const unsigned char *command){
-	usleep(3000); // no handshaking for bluetooth so sleep 1 second
+	//usleep(1000); // no handshaking for bluetooth so sleep 1 second
 	int i;
 	for (i = 0; i < strlen(command); i++) {
 		bluetooth_put_char(command[i]);
 		//printf("Char send: %c\n", command[i]);
-		usleep(1000);
+		//usleep(1000);
 	}
 
-	usleep(3000); // no handshaking for bluetooth so sleep 1 second
+	//usleep(1000); // no handshaking for bluetooth so sleep 1 second
 	//printf("\n");
 }
 
 void bluetooth_send_data(const unsigned char *command, const int length){
-	usleep(3000); // no handshaking for bluetooth so sleep 1 second
+	//usleep(3000); // no handshaking for bluetooth so sleep 1 second
 	int i;
 	for (i = 0; i < length; i++) {
 		bluetooth_put_char(command[i]);
 		//printf("Char send: %c\n", command[i]);
-		usleep(1000);
+		//usleep(1000);
 	}
 
-	usleep(3000); // no handshaking for bluetooth so sleep 1 second
+	//usleep(3000); // no handshaking for bluetooth so sleep 1 second
 	//printf("\n");
 }
 
