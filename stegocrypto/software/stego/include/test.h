@@ -27,5 +27,6 @@ void rgb_test();
 void geoencryption_engine_test();
 void stegocrypto_test_embed();
 void picture_transfer_test();
+void data_transfer_test();
 
 #endif /* TEST_H_ */

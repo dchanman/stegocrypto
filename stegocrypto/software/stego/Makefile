@@ -190,6 +190,8 @@ C_SRCS += src/libraries/xtea_engine.c
 C_SRCS += src/applications/main_controller.c
 C_SRCS += src/libraries/picture_transfer.c
 C_SRCS += test/picture_transfer_test.c
+C_SRCS += src/libraries/data_transfer.c
+C_SRCS += test/data_transfer_test.c
 CXX_SRCS :=
 ASM_SRCS :=
 
