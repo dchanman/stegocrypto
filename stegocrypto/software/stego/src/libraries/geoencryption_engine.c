@@ -34,7 +34,7 @@ void geoencryption_engine_encrypt(const char * data, const int data_length, char
 	xtea_engine_encipher_str(data, data_length, encrypted, encrypted_length, key);
 }
 
-void geoencryption_engine_decrypt(const char * data, const int data_length, char ** decrypted, int * decrypted_length) {
+void geoencryption_engine_decrypt(const char * data, const int data_length, char ** decrypted, int * decrypted_length, char * longitude_out, char * latitude_out) {
 	RMC_data rmc_data;
 	Location location;
 	int long_deg;
@@ -77,4 +77,11 @@ void geoencryption_engine_decrypt(const char * data, const int data_length, char
 
 	/* Decrypt our data */
 	xtea_engine_decipher_str(data, data_length, decrypted, decrypted_length, key);
+
+	/* Write our outputs */
+	if (longitude_out != NULL)
+		sprintf(longitude_out, "%d.%d", long_deg, long_deg_decimal);
+
+	if (latitude_out != NULL)
+		sprintf(latitude_out, "%d.%d", lat_deg, lat_deg_decimal);
 }

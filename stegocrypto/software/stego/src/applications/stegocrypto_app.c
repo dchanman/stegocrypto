@@ -109,6 +109,8 @@ static void stegocrypto_app_encrypt() {
 
 
 static void stegocrypto_app_decrypt() {
+		char long_key_buffer[16];
+		char lat_key_buffer[16];
 		unsigned char * image;
 		int image_length;
 		char * extracted;
@@ -131,7 +133,7 @@ static void stegocrypto_app_decrypt() {
 
 		/* Decrypt */
 		printf("[%s] Decrypting...\n", __func__);
-		stegocrypto_engine_extract(image, &extracted, &extracted_length);
+		stegocrypto_engine_extract(image, &extracted, &extracted_length, long_key_buffer, lat_key_buffer);
 		stegocrypto_app_debug_dump_string(extracted, extracted_length);
 
 		/* Send it back */
