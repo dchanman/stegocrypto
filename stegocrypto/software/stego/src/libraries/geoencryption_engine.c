@@ -66,6 +66,8 @@ void geoencryption_engine_decrypt(const char * data, const int data_length, char
 	long_deg_decimal = location.long_minute / 60 * 100;
 	lat_deg_decimal = location.lat_minute / 60 * 100;
 
+	printf("[%s] Key: long: %d.%d lat: %d.%d\n", __func__, long_deg, long_deg_decimal, lat_deg, lat_deg_decimal);
+
 	key[0] = (unsigned int)long_deg;
 	key[1] = (unsigned int)long_deg_decimal;
 	key[2] = (unsigned int)lat_deg;
