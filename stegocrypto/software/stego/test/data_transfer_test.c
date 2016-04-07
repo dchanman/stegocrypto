@@ -24,17 +24,23 @@
 void data_transfer_test() {
 	data_transfer_init();
 
-		unsigned char * recv_msg = NULL;
+		unsigned char * recv_msg;
+		char testbuffer[32];
+		int recv_msg_length;
+		int writesize;
 
 		while (TRUE) {
-			if (!data_transfer_receive(&recv_msg))
+			if (!data_transfer_receive(&recv_msg, &recv_msg_length))
 				continue;
 
-			printf("Received %s\n", recv_msg);
+			memset(testbuffer, '\0', sizeof(testbuffer));
+			writesize = (recv_msg_length < sizeof(testbuffer) - 1 ? recv_msg_length : sizeof(testbuffer) - 1);
+			memcpy(testbuffer, recv_msg, writesize);
+			printf("Received (%d) %s\n", writesize, testbuffer);
 			printf("Done receiving\n");
 
 			printf("Test sending\n");
-			data_transfer_send(recv_msg, strlen(recv_msg) + 1);
+			data_transfer_send(recv_msg, recv_msg_length);
 			free(recv_msg);
 			printf("Done\n");
 		}

@@ -39,8 +39,9 @@ void data_transfer_init();
  * Receives a message from the serial port over bluetooth
  *
  * @param recv_msg - pointer to a message that will be received
+ * @param length_out - size of message received
  */
-boolean data_transfer_receive(unsigned char ** recv_msg);
+boolean data_transfer_receive(unsigned char ** recv_msg, int * length_out);
 
 /*
  * Sends a message using the serial port over bluetooth
