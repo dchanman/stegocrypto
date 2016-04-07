@@ -24,31 +24,25 @@ static void stegocrypto_app_debug_dump_string(const unsigned char * data, const 
 	printf("[%s] Received data: %s\n", __FILE__, debug);
 }
 
-void stegocrypto_app_main() {
+static void stegocrypto_app_encrypt() {
 	unsigned char * data;
-	int data_length;
-	unsigned char * image;
-	int image_length;
-	unsigned char * longitude;
-	int longitude_length;
-	float longf;
-	unsigned char * latitude;
-	float latf;
-	int latitude_length;
-	boolean result;
+		int data_length;
+		unsigned char * image;
+		int image_length;
+		unsigned char * longitude;
+		int longitude_length;
+		float longf;
+		unsigned char * latitude;
+		float latf;
+		int latitude_length;
+		boolean result;
 
-	/* Initialize everything */
-	data_transfer_init();
-	stegocrypto_engine_init();
-	sdcard_init();
+		printf("[%s]\n", __func__);
 
-	printf("StegoCrypto App\n");
-
-	while (1) {
 		/* Get data */
 		result = data_transfer_receive(&data, &data_length);
 		if (!result) {
-			continue;
+			return;
 		}
 		stegocrypto_app_debug_dump_string(data, data_length);
 
@@ -56,7 +50,7 @@ void stegocrypto_app_main() {
 		result = data_transfer_receive(&longitude, &longitude_length);
 		if (!result) {
 			free(data);
-			continue;
+			return;
 		}
 		stegocrypto_app_debug_dump_string(longitude, longitude_length);
 		longf = atof(longitude);
@@ -66,7 +60,7 @@ void stegocrypto_app_main() {
 		if (!result) {
 			free(data);
 			free(longitude);
-			continue;
+			return;
 		}
 		stegocrypto_app_debug_dump_string(latitude, latitude_length);
 		latf = atof(latitude);
@@ -79,7 +73,7 @@ void stegocrypto_app_main() {
 			free(data);
 			free(longitude);
 			free(latitude);
-			continue;
+			return;
 		}
 		printf("[%s]: Done receiving image (size %d)\n", __func__, image_length);
 
@@ -111,7 +105,73 @@ void stegocrypto_app_main() {
 		free(latitude);
 
 		printf("[%s]: Done!\n", __func__);
+}
 
 
+static void stegocrypto_app_decrypt() {
+		unsigned char * image;
+		int image_length;
+		char * extracted;
+		int extracted_length;
+		boolean result;
+
+		printf("[%s]\n", __func__);
+
+		/* Get image */
+		result = data_transfer_receive(&image, &image_length);
+		if (!result) {
+			printf("[%s]: Timed out while receiving image file\n", __func__);
+			return;
+		}
+		printf("[%s]: Done receiving image (size %d)\n", __func__, image_length);
+
+		/* Save it */
+		printf("[%s] Received image data, exporting...\n", __func__);
+		bitmap_export_image("raw.bmp", image, image_length);
+
+		/* Decrypt */
+		printf("[%s] Decrypting...\n", __func__);
+		stegocrypto_engine_extract(image, &extracted, &extracted_length);
+		stegocrypto_app_debug_dump_string(extracted, extracted_length);
+
+		/* Send it back */
+		printf("[%s] Sending back embedded data...\n", __func__);
+		result = data_transfer_send(extracted, extracted_length);
+
+		/* Draw it */
+		printf("[%s] Drawing...\n", __func__);
+		bitmap_draw_centered_fullscreen(image);
+
+		/* Clean up */
+		printf("[%s]: Cleaning up...\n", __func__);
+		free(image);
+		free(extracted);
+
+		printf("[%s]: Done!\n", __func__);
+}
+
+void stegocrypto_app_main() {
+	unsigned char opt;
+	boolean result;
+
+	/* Initialize everything */
+	data_transfer_init();
+	stegocrypto_engine_init();
+	sdcard_init();
+
+	printf("StegoCrypto App\n");
+
+	while (1) {
+		result = bluetooth_get_char_timeout(&opt, 3000);
+		if (!result)
+			continue;
+
+		if (opt == 'E') {
+			stegocrypto_app_encrypt();
+		} else if (opt == 'D'){
+			stegocrypto_app_decrypt();
+		} else {
+			printf("[%s] Received unknown opt <%c>\n", __func__, opt);
+		}
 	}
 }
