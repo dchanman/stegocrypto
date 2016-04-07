@@ -77,6 +77,7 @@ int main() {
 	//picture_transfer_test();
 	//bluetooth_test();
 	//data_transfer_test();
+	//char_lcd_test();
 	stegocrypto_app_main();
 #endif
 

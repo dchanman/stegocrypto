@@ -43,7 +43,9 @@ void geoencryption_engine_encrypt(const char * data, const int data_length, char
  * @params[in] data_length
  * @params[out] decrypted - plaintext data
  * @params[out] decrypted_length - length of plaintext data, not guaranteed to be same value as data_length!
+ * @params[out] longitude_out - stores the longitude string of the key used. You may set this to NULL if you don't care about this output
+ * @params[out] latitude_out - stores the latitude string of the key used. You may set this to NULL if you don't care about this output
  */
-void geoencryption_engine_decrypt(const char * data, const int data_length, char ** decrypted, int * decrypted_length);
+void geoencryption_engine_decrypt(const char * data, const int data_length, char ** decrypted, int * decrypted_length, char * longitude_out, char * latitude_out);
 
 #endif /* GEOENCRYPTION_ENGINE_H_ */

@@ -44,7 +44,7 @@ void stegocrypto_engine_embed(char * imagedata, const char * data, const int dat
 	free(encrypted_data);
 }
 
-void stegocrypto_engine_extract(const char * imagedata, char ** decrypted, int * decrypted_length) {
+void stegocrypto_engine_extract(const char * imagedata, char ** decrypted, int * decrypted_length, char * longitude_key_out, char * latitude_key_out) {
 	char * encrypted_data;
 	int encrypted_data_length;
 
@@ -52,7 +52,7 @@ void stegocrypto_engine_extract(const char * imagedata, char ** decrypted, int *
 	stego_engine_extract(imagedata, &encrypted_data, &encrypted_data_length);
 
 	/* Now decrypt it */
-	geoencryption_engine_decrypt(encrypted_data, encrypted_data_length, decrypted, decrypted_length);
+	geoencryption_engine_decrypt(encrypted_data, encrypted_data_length, decrypted, decrypted_length, longitude_key_out, latitude_key_out);
 
 	free(encrypted_data);
 }

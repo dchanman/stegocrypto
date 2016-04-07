@@ -32,8 +32,10 @@ void stegocrypto_engine_embed(char * imagedata, const char * data, const int dat
  * @param[in] imagedata - buffer containing a .bmp file with embedded stegographic data
  * @param[out] decrypted - data extracted and decrypted
  * @param[out] decrypted_length - length of data
+ * @params[out] longitude_key_out - stores the longitude string of the key used. You may set this to NULL if you don't care about this output
+ * @params[out] latitude_ket_out - stores the latitude string of the key used. You may set this to NULL if you don't care about this output
  */
-void stegocrypto_engine_extract(const char * imagedata, char ** decrypted, int * decrypted_length);
+void stegocrypto_engine_extract(const char * imagedata, char ** decrypted, int * decrypted_length, char * longitude_key_out, char * latitude_key_out);
 
 
 #endif /* STEGOCRYPTO_H_ */

@@ -24,7 +24,7 @@ void geoencryption_engine_test() {
 	geoencryption_engine_encrypt(data, strlen(data) + 1, &encrypted, &encrypted_length, -123.251, 49.261);
 
 	printf("[%s] Decrypting...\n", __func__);
-	geoencryption_engine_decrypt(encrypted, encrypted_length, &decrypted, &decrypted_length);
+	geoencryption_engine_decrypt(encrypted, encrypted_length, &decrypted, &decrypted_length, NULL, NULL);
 
 	if (strncmp(data, decrypted, strlen(data)) != 0)
 		printf("[%s] FAILED\n", __func__);
@@ -41,7 +41,7 @@ void geoencryption_engine_test() {
 	geoencryption_engine_encrypt(data, strlen(data) + 1, &encrypted, &encrypted_length, -123.261, 49.261);
 
 	printf("[%s] Decrypting...\n", __func__);
-	geoencryption_engine_decrypt(encrypted, encrypted_length, &decrypted, &decrypted_length);
+	geoencryption_engine_decrypt(encrypted, encrypted_length, &decrypted, &decrypted_length, NULL, NULL);
 
 	if (strncmp(data, decrypted, strlen(data)) == 0)
 		printf("[%s] FAILED\n", __func__);

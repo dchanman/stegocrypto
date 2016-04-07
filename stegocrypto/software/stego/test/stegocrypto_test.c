@@ -16,6 +16,8 @@ void stegocrypto_test_embed() {
 	char * imagedata;
 	int imagedata_length;
 	int offset;
+	char long_key_buffer[16];
+	char lat_key_buffer[16];
 
 	const char * msg = "hello this is my secret\n";
 	char * extracted;
@@ -40,7 +42,7 @@ void stegocrypto_test_embed() {
 	printf("[%s] Extracting data...", __func__);
 
 	/* Extract */
-	stegocrypto_engine_extract(imagedata, &extracted, &extracted_length);
+	stegocrypto_engine_extract(imagedata, &extracted, &extracted_length, long_key_buffer, lat_key_buffer);
 	bitmap_draw_centered_fullscreen(imagedata);
 
 	printf("[%s] Extracted <%s>\n", __func__, extracted);
