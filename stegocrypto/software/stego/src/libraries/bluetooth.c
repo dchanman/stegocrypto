@@ -17,10 +17,7 @@
 
 
 void bluetooth_init() {
-	//serial_init(BLUETOOTH, BAUD_RATE_115K);
-
-	*BLUETOOTH = 0x15; // 0b00010101
-	*(BLUETOOTH + 4) = 0x01;
+	serial_init(BLUETOOTH, BAUD_RATE_115K);
 }
 
 void bluetooth_put_char(const unsigned char c) {
@@ -36,30 +33,23 @@ void bluetooth_get_n_char(unsigned char *recv_msg, const int recv_msg_length) {
 	serial_get_n_char(BLUETOOTH, recv_msg, recv_msg_length);
 }
 
+boolean bluetooth_get_char_timeout(unsigned char * char_out, int timeout_millis) {
+	return serial_get_char_timeout(BLUETOOTH, char_out, timeout_millis);
+}
+
+boolean bluetooth_get_n_char_timeout(unsigned char * recv_msg, const int recv_msg_length, int timeout_millis) {
+	return serial_get_n_char_timeout(BLUETOOTH, recv_msg, recv_msg_length, timeout_millis);
+}
+
 void bluetooth_send_command(const unsigned char *command){
-	//usleep(1000); // no handshaking for bluetooth so sleep 1 second
+	usleep(1000); // no handshaking for bluetooth so sleep 1 second
 	int i;
 	for (i = 0; i < strlen(command); i++) {
 		bluetooth_put_char(command[i]);
 		//printf("Char send: %c\n", command[i]);
 		//usleep(1000);
 	}
-
-	//usleep(1000); // no handshaking for bluetooth so sleep 1 second
-	//printf("\n");
-}
-
-void bluetooth_send_data(const unsigned char *command, const int length){
-	//usleep(3000); // no handshaking for bluetooth so sleep 1 second
-	int i;
-	for (i = 0; i < length; i++) {
-		bluetooth_put_char(command[i]);
-		//printf("Char send: %c\n", command[i]);
-		//usleep(1000);
-	}
-
-	//usleep(3000); // no handshaking for bluetooth so sleep 1 second
-	//printf("\n");
+	usleep(1000); // no handshaking for bluetooth so sleep 1 second
 }
 
 int bluetooth_send_cmd_from_template(const char *cmd_template, const char *value){
@@ -86,6 +76,12 @@ int bluetooth_send_cmd_from_template(const char *cmd_template, const char *value
 	return 1;
 }
 
+void bluetooth_send_data(const unsigned char *command, const int length) {
+	int i;
+	for (i = 0; i < length; i++) {
+		bluetooth_put_char(command[i]);
+	}
+}
 
 /*
 // name -  a string up to 20 alphanumeric characters

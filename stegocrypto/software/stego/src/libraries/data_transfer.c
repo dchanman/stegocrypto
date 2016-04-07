@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "general.h"
 #include "data_transfer.h"
 #include "bitmap.h"
 #include "bluetooth.h"
@@ -21,14 +22,16 @@ const unsigned char * SEND_MSG = "S";
 static unsigned int recv_msg_length = 0;
 static unsigned int actual_msg_length = 0;
 
+#define DATA_TRANSFER_TIMEOUT_MILLIS	3000
+
 
 
 //static functions
 //static void data_transfer_init();
 //static void data_transfer_receive(unsigned char *recv_msg);
 //void data_transfer_send(unsigned char *imagedata, const int datalength);
-static void data_transfer_receive_communication(unsigned char *msg, const int msg_length, const int com_stage);
-static void data_transfer_send_communication(unsigned char *msg, const int length, const int com_stage);
+static boolean data_transfer_receive_communication(unsigned char *msg, const int msg_length, const int com_stage);
+static boolean data_transfer_send_communication(unsigned char *msg, const int length, const int com_stage);
 
 /*
 void data_transfer_encode_mode() {
@@ -53,32 +56,52 @@ void data_transfer_init() {
 	bluetooth_init();
 }
 
-void data_transfer_receive(unsigned char ** recv_msg) {
+boolean data_transfer_receive(unsigned char ** recv_msg) {
+	boolean result;
 	unsigned char temp_msg[11];
 	memset(temp_msg, '\0', sizeof(temp_msg));
 
 	//check for ready message to start communication
 	printf("Waiting for ready message!\n");
-	data_transfer_receive_communication(temp_msg, DATA_CONNECTION_CHECK_LENGTH, STAGE_WAIT);
+	result = data_transfer_receive_communication(temp_msg, DATA_CONNECTION_CHECK_LENGTH, STAGE_WAIT);
+	if (!result) {
+		printf("Timed out waiting on ready message\n");
+		return FALSE;
+	}
 
 	//check for length of the string length of the final message
 	printf("Waiting for length of string length message!\n");
-	data_transfer_receive_communication(temp_msg, DATA_LENGTH_CONST, STAGE_STRING_LENGTH);
+	result = data_transfer_receive_communication(temp_msg, DATA_LENGTH_CONST, STAGE_STRING_LENGTH);
+	if (!result) {
+		printf("Timed out waiting for length of string length\n");
+		return FALSE;
+	}
 
 	//check for length of the final message
 	printf("Waiting for string length message!\n");
-	data_transfer_receive_communication(temp_msg, recv_msg_length, STAGE_MESSAGE_LENGTH);
+	result = data_transfer_receive_communication(temp_msg, recv_msg_length, STAGE_MESSAGE_LENGTH);
+	if (!result) {
+		printf("Timed out waiting for string length message\n");
+		return FALSE;
+	}
 
 	//check for file
 	printf("Waiting for file!\n");
 	*recv_msg = malloc(sizeof(unsigned char) * actual_msg_length + 1);
 	memset(*recv_msg, '\0', sizeof(unsigned char) * actual_msg_length + 1);
 
-	data_transfer_receive_communication(*recv_msg, actual_msg_length, STAGE_FINAL);
+	result = data_transfer_receive_communication(*recv_msg, actual_msg_length, STAGE_FINAL);
+	if (!result) {
+		printf("Timed out waiting for data\n");
+		free(*recv_msg);
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
-void data_transfer_send(unsigned char * imagedata, const int datalength) {
-	unsigned char *ready_msg = "S";
+boolean data_transfer_send(unsigned char * imagedata, const int datalength) {
+	boolean result;
 
 	unsigned char send_msg_length[10];
 	memset(send_msg_length, '\0', sizeof(send_msg_length));
@@ -92,20 +115,33 @@ void data_transfer_send(unsigned char * imagedata, const int datalength) {
 	snprintf(length_of_send_msg_length, sizeof(length_of_send_msg_length), "%d", strlen(send_msg_length));
 
 	//send ready message to start communication
-	bluetooth_send_command(ready_msg);
+	bluetooth_send_command(SEND_MSG);
 	printf("Ready message sent!\n");
 
 	//send length of the string length of the final message
-	data_transfer_send_communication(length_of_send_msg_length, strlen(length_of_send_msg_length), STAGE_STRING_LENGTH);
+	result = data_transfer_send_communication(length_of_send_msg_length, strlen(length_of_send_msg_length), STAGE_STRING_LENGTH);
+	if (!result) {
+		printf("Timed out waiting to send length of string length\n");
+		return FALSE;
+	}
 	printf("Length of string length message sent!\n");
 
 	//send length of the final message
-	data_transfer_send_communication(send_msg_length, strlen(send_msg_length), STAGE_MESSAGE_LENGTH);
+	result = data_transfer_send_communication(send_msg_length, strlen(send_msg_length), STAGE_MESSAGE_LENGTH);
+	if (!result) {
+		printf("Timed out waiting to send string length\n");
+		return FALSE;
+	}
 	printf("String length message sent!\n");
 
 	//send final message
-	data_transfer_send_communication(imagedata, datalength, STAGE_FINAL);
+	result = data_transfer_send_communication(imagedata, datalength, STAGE_FINAL);
+	if (!result) {
+		printf("Timed out waiting to send data\n");
+		return FALSE;
+	}
 	printf("Final message sent!\n");
+	return TRUE;
 }
 
 /*
@@ -116,12 +152,13 @@ void data_transfer_send(unsigned char * imagedata, const int datalength) {
  * @param msg_length - length of message
  * @param com_stage - stage in communication
  */
-static void data_transfer_receive_communication(unsigned char * msg, const int msg_length, const int com_stage) {
+static boolean data_transfer_receive_communication(unsigned char * msg, const int msg_length, const int com_stage) {
 	int recv_check = 1;
 
 
 	while(recv_check) {
-		bluetooth_get_n_char(msg, msg_length);
+		if (!bluetooth_get_n_char_timeout(msg, msg_length, DATA_TRANSFER_TIMEOUT_MILLIS))
+			return FALSE;
 
 		switch(com_stage) {
 			//wait for ready message
@@ -178,6 +215,7 @@ static void data_transfer_receive_communication(unsigned char * msg, const int m
 				break;
 		}
 	}
+	return TRUE;
 }
 
 /*
@@ -188,12 +226,13 @@ static void data_transfer_receive_communication(unsigned char * msg, const int m
  * @param msg_length - length of message
  * @param com_stage - stage in communication
  */
-static void data_transfer_send_communication(unsigned char *msg, const int length, const int com_stage) {
+static boolean data_transfer_send_communication(unsigned char *msg, const int length, const int com_stage) {
 	int send_check = 1;
 	unsigned char ready_check[DATA_CONNECTION_CHECK_LENGTH];
 
 	while(send_check) {
-		bluetooth_get_n_char(ready_check, DATA_CONNECTION_CHECK_LENGTH);
+		if (!bluetooth_get_n_char_timeout(ready_check, DATA_CONNECTION_CHECK_LENGTH, DATA_TRANSFER_TIMEOUT_MILLIS))
+			return FALSE;
 
 		//wait for "R" message from receiver
 		if(strncmp(ready_check, READY_MSG, DATA_CONNECTION_CHECK_LENGTH) == 0) {
@@ -204,4 +243,6 @@ static void data_transfer_send_communication(unsigned char *msg, const int lengt
 			send_check = 0;
 		}
 	}
+
+	return TRUE;
 }

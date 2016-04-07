@@ -26,14 +26,18 @@ void data_transfer_test() {
 
 		unsigned char * recv_msg = NULL;
 
-		data_transfer_receive(&recv_msg);
-		printf("Received %s\n", recv_msg);
-		printf("Done receiving\n");
+		while (TRUE) {
+			if (!data_transfer_receive(&recv_msg))
+				continue;
 
-		printf("Test sending\n");
-		data_transfer_send(recv_msg, strlen(recv_msg) + 1);
-		free(recv_msg);
-		printf("Done\n");
+			printf("Received %s\n", recv_msg);
+			printf("Done receiving\n");
+
+			printf("Test sending\n");
+			data_transfer_send(recv_msg, strlen(recv_msg) + 1);
+			free(recv_msg);
+			printf("Done\n");
+		}
 
 	#ifdef SENDING_TESTING
 		const unsigned char * msg = "hello this is my msg";

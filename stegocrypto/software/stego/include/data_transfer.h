@@ -5,6 +5,8 @@
  *      Author: Logan
  */
 
+#include "general.h"
+
 #ifndef DATA_TRANSFER_H_
 #define DATA_TRANSFER_H_
 
@@ -38,7 +40,7 @@ void data_transfer_init();
  *
  * @param recv_msg - pointer to a message that will be received
  */
-void data_transfer_receive(unsigned char ** recv_msg);
+boolean data_transfer_receive(unsigned char ** recv_msg);
 
 /*
  * Sends a message using the serial port over bluetooth
@@ -47,6 +49,6 @@ void data_transfer_receive(unsigned char ** recv_msg);
  * @param send_msg_length - pointer to length of message
  * @param length_of_send_msg_length - pointer to number of characters in send_msg_length
  */
-void data_transfer_send(unsigned char *imagedata, const int datalength);
+boolean data_transfer_send(unsigned char *imagedata, const int datalength);
 
 #endif /* DATA_TRANSFER_H_ */
