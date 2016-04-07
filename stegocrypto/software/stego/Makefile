@@ -177,6 +177,7 @@ C_SRCS += src/applications/minecraft_rpc.c
 C_SRCS += src/applications/minigames/creep_encounter.c
 C_SRCS += src/applications/minigames/digging_minigame.c
 C_SRCS += src/applications/bitmap_display.c
+C_SRCS += src/applications/stegocrypto_app.c
 C_SRCS += src/libraries/geoencryption_engine.c
 C_SRCS += src/libraries/gps.c
 C_SRCS += src/libraries/rs232.c

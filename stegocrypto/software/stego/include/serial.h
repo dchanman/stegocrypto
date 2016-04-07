@@ -8,6 +8,8 @@
 #ifndef SERIAL_H_
 #define SERIAL_H_
 
+#include "general.h"
+
 typedef enum baud_rate {
 	BAUD_RATE_115K = 0x01,
 	BAUD_RATE_57_6K = 0x02,
@@ -51,6 +53,27 @@ unsigned char serial_get_char(const unsigned volatile char * DEV);
  * @param recv_msg_length - the number of characters to read into the buffer
  */
 void serial_get_n_char(const unsigned volatile char * DEV, unsigned char * recv_msg, const int recv_msg_length);
+
+/**
+ * Reads a sequence of characters from the serial port with a timeout
+ *
+ * @param DEV - the address of the serial port device
+ * @param char_out - the character read
+ * @param timeout_millis
+ * @return TRUE on a successful read, FALSE on timeout
+ */
+boolean serial_get_char_timeout(const unsigned volatile char * DEV, unsigned char * char_out, const int timeout_millis);
+
+/**
+ * Reads a sequence of characters from the serial port with a timeout
+ *
+ * @param DEV - the address of the serial port device
+ * @param recv_msg - a buffer to store all received characters
+ * @param recv_msg_length - the number of characters to read into the buffer
+ * @param timeout_millis
+ * @return TRUE on a successful read, FALSE on timeout
+ */
+boolean serial_get_n_char_timeout(const unsigned volatile char * DEV, unsigned char * recv_msg, const int recv_msg_length, const int timeout_millis);
 
 /**
  * Poll the serial port to determine if any character has been received.
