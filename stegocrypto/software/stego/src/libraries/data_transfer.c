@@ -71,7 +71,9 @@ void data_transfer_receive(unsigned char ** recv_msg) {
 
 	//check for file
 	printf("Waiting for file!\n");
-	*recv_msg = malloc(sizeof(unsigned char) * actual_msg_length);
+	*recv_msg = malloc(sizeof(unsigned char) * actual_msg_length + 1);
+	memset(*recv_msg, '\0', sizeof(unsigned char) * actual_msg_length + 1);
+
 	data_transfer_receive_communication(*recv_msg, actual_msg_length, STAGE_FINAL);
 }
 

@@ -25,6 +25,7 @@ void data_transfer_test() {
 	data_transfer_init();
 
 		unsigned char * recv_msg = NULL;
+
 		data_transfer_receive(&recv_msg);
 		printf("Received %s\n", recv_msg);
 		printf("Done receiving\n");
