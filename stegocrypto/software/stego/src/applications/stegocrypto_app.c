@@ -29,7 +29,7 @@ static void stegocrypto_app_debug_dump_string(const unsigned char * data, const 
 static void stegocrypto_app_lcd_print_gps_coords(char * longitude, char * latitude) {
 	char buffer[16];
 
-	snprintf(buffer, sizeof(buffer), "%s %s               ", longitude, latitude);
+	snprintf(buffer, sizeof(buffer), "%s %s               ", latitude, longitude);
 	char_lcd_set_pos(1, 0);
 	char_lcd_write(buffer);
 }
