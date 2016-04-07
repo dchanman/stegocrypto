@@ -22,6 +22,7 @@ void char_lcd_init() {
 	}
 
 	alt_up_character_lcd_init(char_lcd_dev);
+	alt_up_character_lcd_cursor_off(char_lcd_dev);
 }
 
 void char_lcd_write(const char * msg) {
