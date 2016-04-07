@@ -192,6 +192,7 @@ static void stegocrypto_app_decrypt() {
 	printf("[%s] Decrypting...\n", __func__);
 	stegocrypto_engine_extract(image, &extracted, &extracted_length, long_key_buffer, lat_key_buffer);
 	stegocrypto_app_debug_dump_string(extracted, extracted_length);
+	stegocrypto_app_lcd_print_gps_coords(long_key_buffer, lat_key_buffer);
 
 	/* Send it back */
 	printf("[%s] Sending back embedded data...\n", __func__);

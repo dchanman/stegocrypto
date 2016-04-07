@@ -63,8 +63,14 @@ void geoencryption_engine_decrypt(const char * data, const int data_length, char
 	 */
 	long_deg = location.long_degree * (location.long_direction = 'W' ? -1 : 1);
 	lat_deg = location.lat_degree* (location.long_direction = 'N' ? 1 : -1);
-	long_deg_decimal = location.long_minute / 60 * 100;
-	lat_deg_decimal = location.lat_minute / 60 * 100;
+
+	/* Notice if you add 0.5 and then truncate, you basically rounded */
+	long_deg_decimal = location.long_minute / 60 * 1000;
+	lat_deg_decimal = location.lat_minute / 60 * 1000;
+	long_deg_decimal += 5;
+	lat_deg_decimal += 5;
+	long_deg_decimal /= 10;
+	lat_deg_decimal /= 10;
 
 	printf("[%s] Key: long: %d.%d lat: %d.%d\n", __func__, long_deg, long_deg_decimal, lat_deg, lat_deg_decimal);
 
