@@ -13,6 +13,17 @@
 #include "bitmap.h"
 #include "sdcard.h"
 
+static void stegocrypto_app_debug_dump_string(const unsigned char * data, const int length) {
+	char debug[64];
+	int debug_len;
+
+	memset(debug, '\0', sizeof(debug));
+	debug_len = (
+	sizeof(debug) < length + 1 ? sizeof(debug) : length + 1);
+	snprintf(debug, debug_len, "%s", data);
+	printf("[%s] Received data: %s\n", __FILE__, debug);
+}
+
 void stegocrypto_app_main() {
 	unsigned char * data;
 	int data_length;
@@ -20,12 +31,11 @@ void stegocrypto_app_main() {
 	int image_length;
 	unsigned char * longitude;
 	int longitude_length;
-	unsigned char * latitiude;
-	int latitiude_length;
+	float longf;
+	unsigned char * latitude;
+	float latf;
+	int latitude_length;
 	boolean result;
-
-	char debug[64];
-	int debug_len;
 
 	/* Initialize everything */
 	data_transfer_init();
@@ -40,10 +50,26 @@ void stegocrypto_app_main() {
 		if (!result) {
 			continue;
 		}
-		memset(debug, '\0', sizeof(debug));
-		debug_len = (sizeof(debug) < data_length + 1 ? sizeof(debug) : data_length + 1);
-		snprintf(debug, debug_len, "%s", data);
-		printf("[%s] Received data: %s\n", __func__, debug);
+		stegocrypto_app_debug_dump_string(data, data_length);
+
+		/* Get longitude */
+		result = data_transfer_receive(&longitude, &longitude_length);
+		if (!result) {
+			free(data);
+			continue;
+		}
+		stegocrypto_app_debug_dump_string(longitude, longitude_length);
+		longf = atof(longitude);
+
+		/* Get latitude */
+		result = data_transfer_receive(&latitude, &latitude_length);
+		if (!result) {
+			free(data);
+			free(longitude);
+			continue;
+		}
+		stegocrypto_app_debug_dump_string(latitude, latitude_length);
+		latf = atof(latitude);
 
 
 		/* Get image */
@@ -51,51 +77,38 @@ void stegocrypto_app_main() {
 		if (!result) {
 			printf("[%s]: Timed out while receiving image file\n", __func__);
 			free(data);
+			free(longitude);
+			free(latitude);
 			continue;
 		}
 		printf("[%s]: Done receiving image (size %d)\n", __func__, image_length);
 
-		/* Echo the data */
-		result = data_transfer_send(data, data_length);
-		if (!result) {
-			printf("[%s]: Timed out echoing data\n", __func__);
-		}
+		/* Save it */
+		printf("[%s] Received image data, exporting...\n", __func__);
+		bitmap_export_image("raw.bmp", image, image_length);
+
+		/* Encrypt */
+		printf("[%s] Encrypting with long <%0.4f> latf <%0.4f>...\n", __func__, longf, latf);
+		stegocrypto_engine_embed(image, data, data_length, longf, latf);
+
+		/* Send it back */
+		printf("[%s] Sending back embedded data...\n", __func__);
+		result = data_transfer_send(image, image_length);
 
 		/* Save it */
 		printf("[%s] Received image data, exporting...\n", __func__);
-		bitmap_export_image("recent.bmp", image, image_length);
+		bitmap_export_image("enc.bmp", image, image_length);
 
 		/* Draw it */
 		printf("[%s] Drawing...\n", __func__);
 		bitmap_draw_centered_fullscreen(image);
-
-
-//		/* Get longitude */
-//		result = data_transfer_receive(&longitude, &longitude_length);
-//		if (!result) {
-//			free(data);
-//			free(image);
-//			continue;
-//		}
-//
-//		/* Get latitude */
-//		result = data_transfer_receive(&latitiude, &latitiude_length);
-//		if (!result) {
-//			free(data);
-//			free(image);
-//			free(longitude);
-//			continue;
-//		}
-
-		/* Encrypt */
-
 
 		/* Clean up */
 		printf("[%s]: Cleaning up...\n", __func__);
 		free(data);
 		free(image);
 		free(longitude);
-		free(latitiude);
+		free(latitude);
 
 		printf("[%s]: Done!\n", __func__);
 
