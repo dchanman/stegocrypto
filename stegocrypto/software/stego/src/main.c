@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "main_controller.h"
+#include "stegocrypto_app.h"
 
 /* Comment this #define out when we're done testing */
 #define TESTING
@@ -75,7 +76,8 @@ int main() {
 	//stegocrypto_test_embed();
 	//picture_transfer_test();
 	//bluetooth_test();
-	data_transfer_test();
+	//data_transfer_test();
+	stegocrypto_app_main();
 #endif
 
 	//main_controller_run();

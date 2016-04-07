@@ -22,6 +22,10 @@ static void cryptodump(const char * encrypted, const int encrypted_length) {
 }
 #endif
 
+void stegocrypto_engine_init() {
+	geoencryption_engine_init();
+}
+
 void stegocrypto_engine_embed(char * imagedata, const char * data, const int datalength, const float longitude_key, const float latitude_key) {
 	char * encrypted_data;
 	int encrypted_data_length;

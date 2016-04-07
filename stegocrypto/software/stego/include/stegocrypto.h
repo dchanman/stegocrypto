@@ -9,6 +9,11 @@
 #define STEGOCRYPTO_H_
 
 /**
+ * Initializes stegocrypto engine and its dependent subcomponents
+ */
+void stegocrypto_engine_init();
+
+/**
  * Geographically encrypts and stegographically embeds data into the .bmp imagedata buffer
  *
  * @param[inout] imagedata - buffer containing a .bmp file. The RGB values will be modified to store the data
